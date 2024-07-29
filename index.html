@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caleb Sanchez - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+	<link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+	<img id="intro-image" src="images/tryClicking.png" alt="Try clicking the headers!" class="custom-image positioned-image">
+	<img id="cat-image" src="images/pictureOfCats.jpg" alt="My Kitties :)" class="cat-image hidden">
+    <header>
+        <h1><span id="typing"></span></h1>
+        <nav>
+            <ul>
+                <li><a href="#about">About Me</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+				<li><a href="#projects">Projects</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+	<main>
+		<div id="level-up">
+			<p>Level: <span id="level">1</span></p>
+			<div id="progress-container">
+				<div id="progress-bar"></div>
+			</div>
+		</div>
+		<div id="level-message" class="hidden"></div>
+			<div id="prompt-container" class="hidden">
+				<p id="prompt-message"></p>
+				<button id="yes-button">Yes</button>
+				<button id="no-button">No</button>
+		</div>
+		<section id="about" class="appear">
+			<h2>About Me</h2>
+			<p>Hello, I'm Caleb Sanchez, a Full-Stack Developer specializing in the .NET Framework. With a passion for backend work, I enjoy creating custom code solutions and optimizing performance in various applications.</p>
+		</section>
+
+		<section id="skills" class="appear">
+			<h2>Languages and Technologies</h2>
+			<ul class="bullet-points">
+				<li>C#</li>
+				<li>SQL</li>
+				<li>Python</li>
+				<li>Golang</li>
+				<li>ReactJS</li>
+				<li>SQL Server Management Studio</li>
+				<li>Visual Studio 2017</li>
+				<li>Jira</li>
+				<li>Git</li>
+				<li>Docker</li>
+				<li>Jenkins</li>
+			</ul>
+		</section>
+
+		<section id="experience" class="appear">
+			<h2>Experience</h2>
+			<div class="job">
+				<h3>.NET Developer at Finys, Troy, MI (February 2023 - Present)</h3>
+				<ul class="bullet-points">
+					<li>Develops custom code solutions for clients within our cutting-edge proprietary suite exclusively designed for the insurance industry.</li>
+					<li>Collaborates closely with clients to address defects and incorporate new requirements into their applications.</li>
+					<li>Utilizes C#, Visual Studio, and IIS to deliver high-quality code ensuring seamless functionality and scalability.</li>
+					<li>Contributes to the development of the latest version of the Finys Suite, actively involved in feature implementation, performance optimization, and ensuring code readability.</li>
+					<li>Prepares and delivers training sessions to educate team members on the utilization and migration to the latest version of the Finys Suite.</li>
+				</ul>
+			</div>
+			<div class="job">
+				<h3>Software Developer at Menlo Innovations, Ann Arbor, MI (March 2022 – February 2023)</h3>
+				<ul class="bullet-points">
+					<li>Primarily worked on back-end development using Golang, with occasional experience in Java using Spring Boot.</li>
+					<li>Specialized in optimizing performance through multithreading, microservice architecture, and database optimization.</li>
+					<li>Proficient in front-end technologies such as ReactJS, Python, and C#, enabling the creation of captivating website and application designs.</li>
+					<li>Adhered to scrum methodologies, sprints, and feature-branching to deliver clean and maintainable code. Prioritized code readability by leveraging design patterns and using descriptive variables.</li>
+					<li>Emphasized the importance of functional and unit testing for ensuring the reliability and functionality of applications.</li>
+					<li>Collaborated effectively in team-based environments, including paired programming methodologies.</li>
+				</ul>
+			</div>
+			<div class="job">
+				<h3>Area Manager at Amazon, Thornton, CO (January 2021– March 2022)</h3>
+				<ul class="bullet-points">
+					<li>Implemented strategies that resulted in cost savings of over $4 million annually for Amazon.</li>
+					<li>Achieved a significant productivity increase of nearly 16% within the first two weeks, maintaining continuous improvement through effective employee engagement.</li>
+					<li>Utilized fulfillment center output volume and productivity metrics to optimize staffing, hiring, and indirect support assignments, minimizing profit loss.</li>
+					<li>Successfully managed daily operations and a team of 200+ employees, overseeing 70 direct reports.</li>
+					<li>Provided coaching and guidance to associates, driving productivity, quality, and maintaining high safety standards.</li>
+					<li>Fostered a positive work environment by personally engaging with 20+ employees daily, actively addressing their concerns and barriers, and supporting their personal and professional goals.</li>
+				</ul>
+			</div>
+			<div class="job">
+				<h3>Software Developer at Infosys, Raleigh, NC (July 2019 – Feb 2020)</h3>
+				<ul class="bullet-points">
+					<li>Acquired comprehensive training in data science, specializing in data wrangling, data analysis, and statistical thinking.</li>
+					<li>Demonstrated expertise in software development, encompassing coding, testing, production support, and knowledge management.</li>
+				</ul>
+			</div>
+		</section>
+		
+		<section id="projects" class="appear">
+			<h2>Projects</h2>
+			<p>I will say that my Github projects are mostly not in C# mainly due to the fact that I work in C# for a living. Usually I upload stuff to github to help me learn other things outside of my current job. Feel free to check out the projects I have made!</p>
+			<div class="project">
+				<h3><a href="https://github.com/CalebCSanchez/MakeComputerGoNightNight" target="_blank" style="color: #ff6fd8;">Make Computer Go Night Night</a></h3>
+				<p>This project was made to shut down my computer after a certain amount of time. It's just a cool ui that would let me watch videos as I fell asleep and turn the computer off.</p>
+			</div>
+			<div class="project">
+				<h3><a href="https://github.com/CalebCSanchez/PythonRandomVideoPlayer" target="_blank" style="color: #ff6fd8;">Python Random Video Player</a></h3>
+				<p>I got tired of having to watch tv shows I want to put in the background one at a time. I thought maybe I could make an app that'll randomly play videos you choose like how TV use too except without all the annoying ads!</p>
+			</div>
+			<div class="project">
+				<h3><a href="https://github.com/CalebCSanchez/PictureSorter" target="_blank" style="color: #ff6fd8;">Picture Sorter</a></h3>
+				<p>I know for a fact I'm not about to look through 1000s of cloud storage photos to look for duplicates so I made an app! Given a directory it'll sort through photos to find matches and then delete one of them.</p>
+			</div>
+		</section>
+		
+		<section id="education" class="appear">
+			<h2>Education</h2>
+			<p><strong>Texas Tech University, Whitacre College of Engineering</strong>, Lubbock, TX</p>
+			<p>Bachelor of Science, Computer Science, May 2019</p>
+			<p>Minor in Mathematics</p>
+		</section>
+
+		<section id="contact" class="appear">
+			<h2>Contact</h2>
+			<p>Email: <a href="mailto:calebcsanchez1@gmail.com" style="color: #ff6fd8;">calebcsanchez1@gmail.com</a></p>
+			<p>LinkedIn: <a href="https://www.linkedin.com/in/calebcsanchez1" target="_blank" style="color: #ff6fd8;">linkedin.com/in/calebcsanchez1</a></p>
+			<p>GitHub: <a href="https://github.com/CalebCSanchez" target="_blank" style="color: #ff6fd8;">github.com/CalebCSanchez</a></p>
+		</section>
+		<div id="end-space"></div>
+	</main>
+    <footer>
+        <p>&copy; 2024 Caleb Sanchez</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
