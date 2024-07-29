@@ -123,26 +123,6 @@ footer {
 	z-index: 999;
 }
 
-@media (max-width: 600px) {
-    header h1 {
-        font-size: 2rem;
-    }
-
-    nav ul li {
-        display: block;
-        margin: 10px 0;
-    }
-
-    section {
-        margin: 10px;
-        padding: 15px;
-    }
-
-    footer {
-        font-size: 0.8rem;
-    }
-}
-
 ul {
     padding-left: 20px;
 }
@@ -243,4 +223,91 @@ ul li {
 
 .visible {
     display: block;
+}
+
+@media (max-width: 810px) {
+    body {
+        padding-top: 70px; /* Adjust this value if needed */
+    }
+
+    header h1 {
+        font-size: 1.5rem;
+    }
+
+    nav ul li {
+        display: none;
+    }
+
+    section {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    footer {
+        font-size: 0.8rem;
+    }
+    #level-up {
+        display: none;
+    }
+    #progress-bar {
+        display: none;
+    }
+
+    #prompt-container {
+        display: none;
+    }
+
+    #prompt-container p {
+        display: none;
+    }
+
+    #prompt-container button {
+        display: none;
+    }
+
+    .custom-image {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        padding-top: 70px; /* Further adjust for very small screens */
+    }
+
+    header h1 {
+        font-size: 1.2rem;
+    }
+
+    nav ul li {
+        display: none;
+    }
+
+    section {
+        padding: 10px;
+    }
+
+    footer {
+        font-size: 0.7rem;
+    }
+
+    #progress-bar {
+        display: none;
+    }
+
+    #prompt-container {
+        display: none;
+    }
+
+    #prompt-container p {
+        display: none;
+    }
+
+    #prompt-container button {
+        display: none;
+    }
+
+    .custom-image {
+        display: none;
+    }
 }
