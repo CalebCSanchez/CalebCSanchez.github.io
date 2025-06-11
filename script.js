@@ -1,7 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     const navLinks = document.querySelectorAll('nav ul li a');
+    const mobileNavLinks = document.querySelectorAll('.mobile-menu a');
     const sections = Array.from(document.querySelectorAll('section'));	
     const endSpace = document.getElementById('end-space');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
 
     const typingElement = document.getElementById('typing');
     const text = "Caleb Sanchez";
@@ -19,36 +22,55 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setTimeout(type, 500); 
 
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = link.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
+    // Mobile menu toggle
+    mobileMenuBtn.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        mobileMenu.classList.toggle('visible');
+    });
 
-            sections.forEach(section => {
-                section.classList.remove('appear');
-            });
+    // Handle navigation clicks (both desktop and mobile)
+    function handleNavClick(e) {
+        e.preventDefault();
+        const targetId = e.target.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
 
-            const newOrder = [targetElement, ...sections.filter(section => section !== targetElement)];
-
-            newOrder.forEach((section, index) => {
-                document.body.appendChild(section);
-                setTimeout(() => {
-                    section.classList.add('appear');
-                }, index * 200); 
-            });
-
-			document.body.appendChild(endSpace);
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-
-            const introImage = document.getElementById('intro-image');
-            if (introImage) {
-                introImage.remove();
-            }
+        sections.forEach(section => {
+            section.classList.remove('appear');
         });
+
+        const newOrder = [targetElement, ...sections.filter(section => section !== targetElement)];
+
+        newOrder.forEach((section, index) => {
+            document.body.appendChild(section);
+            setTimeout(() => {
+                section.classList.add('appear');
+            }, index * 200); 
+        });
+
+        document.body.appendChild(endSpace);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        const introImage = document.getElementById('intro-image');
+        if (introImage) {
+            introImage.remove();
+        }
+
+        // Close mobile menu if open
+        if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            mobileMenu.classList.remove('visible');
+        }
+    }
+
+    navLinks.forEach(link => {
+        link.addEventListener('click', handleNavClick);
+    });
+
+    mobileNavLinks.forEach(link => {
+        link.addEventListener('click', handleNavClick);
     });
 
     const sectionHeaders = document.querySelectorAll('header li');
@@ -78,6 +100,16 @@ document.addEventListener('DOMContentLoaded', () => {
         promptMessage.textContent = message;
         promptContainer.classList.remove('hidden');
         promptContainer.classList.add('visible');
+        
+        // Center the prompt
+        const rect = promptContainer.getBoundingClientRect();
+        promptContainer.style.position = 'fixed';
+        promptContainer.style.top = '50%';
+        promptContainer.style.left = '50%';
+        promptContainer.style.transform = 'translate(-50%, -50%)';
+        promptContainer.style.padding = '20px';
+        promptContainer.style.maxWidth = '400px';
+        promptContainer.style.width = '90%';
     }
 
     function hidePrompt() {
@@ -123,7 +155,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     yesButton.addEventListener('click', () => {
         hidePrompt();
-		showMessage("Their name's are bean and cheese :)");
+		showMessage("Their names are Bean and Cheese :)");
+        catImage.classList.remove('hidden');
         catImage.classList.add('visible');
     });
 
@@ -131,4 +164,24 @@ document.addEventListener('DOMContentLoaded', () => {
         hidePrompt();
         showMessage("Oh :(");
     });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!mobileMenuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+                mobileMenu.classList.remove('visible');
+            }
+        }
+    });
+
+    // Smooth scrolling for banner CTA
+    const bannerCTA = document.querySelector('.banner-cta');
+    if (bannerCTA) {
+        bannerCTA.addEventListener('click', (e) => {
+            // Since this now links to an external site, we don't need to prevent default
+            // Just let it open the external link naturally
+            // The target="_blank" in the HTML will handle opening in a new tab
+        });
+    }
 });
