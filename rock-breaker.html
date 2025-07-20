@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Breaker Simulator - Caleb Sanchez</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <style>
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            font-family: 'Press Start 2P', cursive;
+        }
+        
+        .game-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .game-header h1 {
+            color: #00ff41;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #00ff41;
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 2px solid #00ff41;
+            background: rgba(0,0,0,0.8);
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: #00ff41;
+            color: #000;
+        }
+        
+        .game-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px 300px;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .grid-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .mining-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 80px);
+            grid-template-rows: repeat(3, 80px);
+            gap: 5px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ff41;
+        }
+        
+        .grid-cell {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #333;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            font-size: 12px;
+            color: #fff;
+        }
+        
+        .grid-cell.stone {
+            background: #666;
+            border-color: #999;
+        }
+        
+        .grid-cell.stone:hover {
+            background: #777;
+        }
+        
+        .grid-cell.empty {
+            background: #222;
+            border-color: #444;
+            cursor: not-allowed;
+        }
+        
+        .grid-cell.purchasable {
+            background: #004400;
+            border-color: #008800;
+            cursor: pointer;
+        }
+        
+        .grid-cell.purchasable:hover {
+            background: #006600;
+        }
+        
+        .health-bar {
+            position: absolute;
+            bottom: 2px;
+            left: 2px;
+            right: 2px;
+            height: 4px;
+            background: #300;
+            border: 1px solid #600;
+        }
+        
+        .health-fill {
+            height: 100%;
+            background: #ff0000;
+            transition: width 0.3s ease;
+        }
+        
+        .shop, .inventory {
+            background: rgba(0,0,0,0.8);
+            border: 2px solid #00ff41;
+            padding: 15px;
+            height: fit-content;
+        }
+        
+        .shop h3, .inventory h3 {
+            color: #00ff41;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+        
+        .shop-item, .inventory-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(0,255,65,0.1);
+            border: 1px solid #00ff41;
+            color: #fff;
+            font-size: 10px;
+        }
+        
+        .shop-button {
+            background: #00ff41;
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 8px;
+            margin-top: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .shop-button:hover {
+            background: #00cc33;
+        }
+        
+        .shop-button:disabled {
+            background: #666;
+            cursor: not-allowed;
+        }
+        
+        .stats {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #fff;
+            font-size: 12px;
+        }
+        
+        .stat-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(0,255,65,0.1);
+            border: 1px solid #00ff41;
+        }
+        
+        .auto-clicker-indicator {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffff00;
+            font-size: 8px;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        /* Shake animation for when clicking rocks */
+        @keyframes shake {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            10% { transform: translate(-2px, -1px) rotate(-1deg); }
+            20% { transform: translate(2px, 1px) rotate(1deg); }
+            30% { transform: translate(-1px, 2px) rotate(-1deg); }
+            40% { transform: translate(1px, -2px) rotate(1deg); }
+            50% { transform: translate(-2px, 1px) rotate(-1deg); }
+            60% { transform: translate(2px, -1px) rotate(1deg); }
+            70% { transform: translate(-1px, -2px) rotate(-1deg); }
+            80% { transform: translate(1px, 2px) rotate(1deg); }
+            90% { transform: translate(-2px, -1px) rotate(-1deg); }
+        }
+        
+        .grid-cell.shaking {
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        /* Crumble animation for when blocks break */
+        @keyframes crumble {
+            0% { 
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            25% {
+                transform: scale(0.9) rotate(-2deg);
+                opacity: 0.8;
+            }
+            50% {
+                transform: scale(0.7) rotate(2deg);
+                opacity: 0.6;
+            }
+            75% {
+                transform: scale(0.4) rotate(-3deg);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(0) rotate(5deg);
+                opacity: 0;
+            }
+        }
+        
+        .grid-cell.crumbling {
+            animation: crumble 0.8s ease-out forwards;
+        }
+        
+        /* Particle effects */
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #888;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        @keyframes particle-fall {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--fall-x), var(--fall-y)) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .particle.falling {
+            animation: particle-fall 1s ease-out forwards;
+        }
+        
+        .damage-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ff6666;
+            font-size: 10px;
+            pointer-events: none;
+            animation: damage-float 1s ease-out forwards;
+            z-index: 999;
+        }
+        
+        @keyframes damage-float {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -100%);
+            }
+        }
+        
+        .drop-popup {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ff41;
+            font-size: 8px;
+            pointer-events: none;
+            animation: drop-float 2s ease-out forwards;
+        }
+        
+        @keyframes drop-float {
+            0% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-50px);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .game-layout {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .mining-grid {
+                grid-template-columns: repeat(3, 60px);
+                grid-template-rows: repeat(3, 60px);
+            }
+            
+            .grid-cell {
+                width: 60px;
+                height: 60px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <a href="index.html" class="back-link">← Back to Portfolio</a>
+        
+        <div class="game-header">
+            <h1>Rock Breaker Simulator</h1>
+            <p style="color: #ccc; font-size: 10px;">Click the stones to break them and collect valuable materials!</p>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">Damage per Click: <span id="damage">1</span></div>
+            <div class="stat-item">Auto-Click Speed: <span id="autoSpeed">0</span> clicks/sec</div>
+        </div>
+        
+        <div class="game-layout">
+            <div class="grid-container">
+                <div class="mining-grid" id="miningGrid">
+                    <!-- Grid cells will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="shop">
+                <h3>SHOP</h3>
+                <div class="shop-item">
+                    <div>Upgrade Damage</div>
+                    <div>Cost: <span id="damageCost">10</span> Copper</div>
+                    <div>Current: +<span id="currentDamage">1</span> per click</div>
+                    <button class="shop-button" id="buyDamage">BUY</button>
+                </div>
+                
+                <div class="shop-item">
+                    <div>Auto-Clicker</div>
+                    <div>Cost: <span id="autoClickerCost">100</span> Copper</div>
+                    <div>Unlocks automatic clicking</div>
+                    <button class="shop-button" id="buyAutoClicker">BUY</button>
+                </div>
+                
+                <div class="shop-item">
+                    <div>Auto-Click Speed</div>
+                    <div>Cost: <span id="autoSpeedCost">50</span> Iron</div>
+                    <div>+0.5 clicks/sec</div>
+                    <button class="shop-button" id="buyAutoSpeed">BUY</button>
+                </div>
+                
+                <div class="shop-item">
+                    <div>Buy Block Space</div>
+                    <div>Cost: <span id="blockCost">200</span> Iron</div>
+                    <div>Unlock adjacent block</div>
+                    <button class="shop-button" id="buyBlock">BUY</button>
+                </div>
+            </div>
+            
+            <div class="inventory">
+                <h3>INVENTORY</h3>
+                <div class="inventory-item">
+                    <div>💰 Copper: <span id="copper">0</span></div>
+                </div>
+                <div class="inventory-item">
+                    <div>⚙️ Iron: <span id="iron">0</span></div>
+                </div>
+                <div class="inventory-item">
+                    <div>🥇 Gold: <span id="gold">0</span></div>
+                </div>
+                <div class="inventory-item">
+                    <div>💎 Diamond: <span id="diamond">0</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class RockBreakerGame {
+            constructor() {
+                this.gameState = {
+                    damage: 1,
+                    autoClickerUnlocked: false,
+                    autoClickSpeed: 0,
+                    inventory: {
+                        copper: 0,
+                        iron: 0,
+                        gold: 0,
+                        diamond: 0
+                    },
+                    upgrades: {
+                        damageLevel: 1,
+                        autoSpeedLevel: 0
+                    },
+                    blocks: [
+                        ['empty', 'empty', 'empty'],
+                        ['empty', 'stone', 'empty'],
+                        ['empty', 'empty', 'empty']
+                    ],
+                    blockHealth: {},
+                    unlockedBlocks: 1,
+                    costs: {
+                        damage: 10,
+                        autoClicker: 100,
+                        autoSpeed: 50,
+                        block: 200
+                    }
+                };
+                
+                this.maxHealth = 20;
+                this.autoClickInterval = null;
+                this.dropRates = {
+                    copper: 0.6,
+                    iron: 0.2,
+                    gold: 0.01,
+                    diamond: 0.0001
+                };
+                
+                this.init();
+            }
+            
+            init() {
+                this.loadGame();
+                this.createGrid();
+                this.updateUI();
+                this.bindEvents();
+                this.initializeBlocks();
+                
+                // Auto-save every 10 seconds
+                setInterval(() => this.saveGame(), 10000);
+            }
+            
+            createGrid() {
+                const grid = document.getElementById('miningGrid');
+                grid.innerHTML = '';
+                
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        
+                        const blockType = this.gameState.blocks[row][col];
+                        cell.classList.add(blockType);
+                        
+                        if (blockType === 'stone') {
+                            const healthBar = document.createElement('div');
+                            healthBar.className = 'health-bar';
+                            const healthFill = document.createElement('div');
+                            healthFill.className = 'health-fill';
+                            healthBar.appendChild(healthFill);
+                            cell.appendChild(healthBar);
+                        } else if (blockType === 'empty' && this.canUnlockBlock(row, col)) {
+                            cell.classList.add('purchasable');
+                            cell.innerHTML = '$';
+                        }
+                        
+                        grid.appendChild(cell);
+                    }
+                }
+            }
+            
+            canUnlockBlock(row, col) {
+                // Check if this empty block is adjacent to a stone block
+                const directions = [[-1,0], [1,0], [0,-1], [0,1]];
+                for (let [dr, dc] of directions) {
+                    const newRow = row + dr;
+                    const newCol = col + dc;
+                    if (newRow >= 0 && newRow < 3 && newCol >= 0 && newCol < 3) {
+                        if (this.gameState.blocks[newRow][newCol] === 'stone') {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            initializeBlocks() {
+                // Initialize health for stone blocks
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        if (this.gameState.blocks[row][col] === 'stone') {
+                            const key = `${row}-${col}`;
+                            if (!this.gameState.blockHealth[key]) {
+                                this.gameState.blockHealth[key] = this.maxHealth;
+                            }
+                        }
+                    }
+                }
+                this.updateHealthBars();
+            }
+            
+            bindEvents() {
+                document.getElementById('miningGrid').addEventListener('click', (e) => {
+                    if (e.target.classList.contains('grid-cell')) {
+                        this.handleCellClick(e.target);
+                    }
+                });
+                
+                document.getElementById('buyDamage').addEventListener('click', () => this.buyUpgrade('damage'));
+                document.getElementById('buyAutoClicker').addEventListener('click', () => this.buyUpgrade('autoClicker'));
+                document.getElementById('buyAutoSpeed').addEventListener('click', () => this.buyUpgrade('autoSpeed'));
+                document.getElementById('buyBlock').addEventListener('click', () => this.buyUpgrade('block'));
+                
+                // Auto-clicker
+                if (this.gameState.autoClickerUnlocked && this.gameState.autoClickSpeed > 0) {
+                    this.startAutoClicker();
+                }
+            }
+            
+            handleCellClick(cell) {
+                const row = parseInt(cell.dataset.row);
+                const col = parseInt(cell.dataset.col);
+                const blockType = this.gameState.blocks[row][col];
+                
+                if (blockType === 'stone') {
+                    this.damageBlock(row, col, cell);
+                } else if (blockType === 'empty' && cell.classList.contains('purchasable')) {
+                    this.purchaseBlock(row, col);
+                }
+            }
+            
+            damageBlock(row, col, cell) {
+                const key = `${row}-${col}`;
+                this.gameState.blockHealth[key] -= this.gameState.damage;
+                
+                // Add shake animation
+                this.addShakeAnimation(cell);
+                
+                // Create particle effects
+                this.createParticles(cell);
+                
+                // Show damage popup
+                this.showDamagePopup(cell, this.gameState.damage);
+                
+                if (this.gameState.blockHealth[key] <= 0) {
+                    this.breakBlock(row, col, cell);
+                } else {
+                    this.updateHealthBar(cell, this.gameState.blockHealth[key]);
+                }
+            }
+            
+            breakBlock(row, col, cell) {
+                // Generate drops
+                const drops = this.generateDrops();
+                
+                // Add drops to inventory
+                for (let [material, amount] of Object.entries(drops)) {
+                    this.gameState.inventory[material] += amount;
+                    if (amount > 0) {
+                        this.showDropPopup(cell, material, amount);
+                    }
+                }
+                
+                // Add crumble animation and then reset
+                this.addCrumbleAnimation(cell, () => {
+                    // Reset block health after animation
+                    const key = `${row}-${col}`;
+                    this.gameState.blockHealth[key] = this.maxHealth;
+                    
+                    // Remove crumble class and reset appearance
+                    cell.classList.remove('crumbling');
+                    this.updateHealthBar(cell, this.maxHealth);
+                });
+                
+                this.updateUI();
+                this.saveGame();
+            }
+            
+            generateDrops() {
+                const drops = { copper: 0, iron: 0, gold: 0, diamond: 0 };
+                
+                // Roll for each material
+                for (let [material, rate] of Object.entries(this.dropRates)) {
+                    if (Math.random() < rate) {
+                        drops[material] = 1;
+                        break; // Only one drop per break
+                    }
+                }
+                
+                return drops;
+            }
+            
+            purchaseBlock(row, col) {
+                if (this.gameState.inventory.iron >= this.gameState.costs.block) {
+                    this.gameState.inventory.iron -= this.gameState.costs.block;
+                    this.gameState.blocks[row][col] = 'stone';
+                    this.gameState.unlockedBlocks++;
+                    
+                    // Initialize health for new block
+                    const key = `${row}-${col}`;
+                    this.gameState.blockHealth[key] = this.maxHealth;
+                    
+                    // Increase cost for next block
+                    this.gameState.costs.block = Math.floor(this.gameState.costs.block * 1.5);
+                    
+                    this.createGrid();
+                    this.updateUI();
+                    this.saveGame();
+                }
+            }
+            
+            buyUpgrade(type) {
+                switch (type) {
+                    case 'damage':
+                        if (this.gameState.inventory.copper >= this.gameState.costs.damage) {
+                            this.gameState.inventory.copper -= this.gameState.costs.damage;
+                            this.gameState.damage++;
+                            this.gameState.upgrades.damageLevel++;
+                            this.gameState.costs.damage = Math.floor(this.gameState.costs.damage * 1.5);
+                        }
+                        break;
+                        
+                    case 'autoClicker':
+                        if (this.gameState.inventory.copper >= this.gameState.costs.autoClicker && !this.gameState.autoClickerUnlocked) {
+                            this.gameState.inventory.copper -= this.gameState.costs.autoClicker;
+                            this.gameState.autoClickerUnlocked = true;
+                            this.gameState.autoClickSpeed = 0.5;
+                            this.startAutoClicker();
+                        }
+                        break;
+                        
+                    case 'autoSpeed':
+                        if (this.gameState.inventory.iron >= this.gameState.costs.autoSpeed && this.gameState.autoClickerUnlocked) {
+                            this.gameState.inventory.iron -= this.gameState.costs.autoSpeed;
+                            this.gameState.autoClickSpeed += 0.5;
+                            this.gameState.upgrades.autoSpeedLevel++;
+                            this.gameState.costs.autoSpeed = Math.floor(this.gameState.costs.autoSpeed * 1.3);
+                            this.startAutoClicker();
+                        }
+                        break;
+                        
+                    case 'block':
+                        // Find first purchasable block and buy it
+                        for (let row = 0; row < 3; row++) {
+                            for (let col = 0; col < 3; col++) {
+                                if (this.gameState.blocks[row][col] === 'empty' && this.canUnlockBlock(row, col)) {
+                                    this.purchaseBlock(row, col);
+                                    return;
+                                }
+                            }
+                        }
+                        break;
+                }
+                
+                this.updateUI();
+                this.saveGame();
+            }
+            
+            startAutoClicker() {
+                if (this.autoClickInterval) {
+                    clearInterval(this.autoClickInterval);
+                }
+                
+                if (this.gameState.autoClickSpeed > 0) {
+                    const interval = 1000 / this.gameState.autoClickSpeed;
+                    this.autoClickInterval = setInterval(() => {
+                        this.autoClick();
+                    }, interval);
+                    
+                    // Show auto-clicker indicators
+                    this.showAutoClickerIndicators();
+                }
+            }
+            
+            autoClick() {
+                // Auto-click all stone blocks
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        if (this.gameState.blocks[row][col] === 'stone') {
+                            const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                            if (cell) {
+                                this.damageBlock(row, col, cell);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            showAutoClickerIndicators() {
+                const stoneCells = document.querySelectorAll('.grid-cell.stone');
+                stoneCells.forEach(cell => {
+                    let indicator = cell.querySelector('.auto-clicker-indicator');
+                    if (!indicator && this.gameState.autoClickSpeed > 0) {
+                        indicator = document.createElement('div');
+                        indicator.className = 'auto-clicker-indicator';
+                        indicator.textContent = 'AUTO';
+                        cell.appendChild(indicator);
+                    } else if (indicator && this.gameState.autoClickSpeed === 0) {
+                        indicator.remove();
+                    }
+                });
+            }
+            
+            updateHealthBar(cell, health) {
+                const healthFill = cell.querySelector('.health-fill');
+                if (healthFill) {
+                    const percentage = (health / this.maxHealth) * 100;
+                    healthFill.style.width = percentage + '%';
+                }
+            }
+            
+            updateHealthBars() {
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        if (this.gameState.blocks[row][col] === 'stone') {
+                            const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                            const key = `${row}-${col}`;
+                            if (cell && this.gameState.blockHealth[key]) {
+                                this.updateHealthBar(cell, this.gameState.blockHealth[key]);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            showDamagePopup(cell, damage) {
+                const popup = document.createElement('div');
+                popup.className = 'damage-popup';
+                popup.textContent = `-${damage}`;
+                cell.appendChild(popup);
+                
+                setTimeout(() => popup.remove(), 1000);
+            }
+            
+            showDropPopup(cell, material, amount) {
+                const popup = document.createElement('div');
+                popup.className = 'drop-popup';
+                const icons = { copper: '💰', iron: '⚙️', gold: '🥇', diamond: '💎' };
+                popup.textContent = `+${amount} ${icons[material]}`;
+                cell.appendChild(popup);
+                
+                setTimeout(() => popup.remove(), 2000);
+            }
+            
+            updateUI() {
+                // Update stats
+                document.getElementById('damage').textContent = this.gameState.damage;
+                document.getElementById('autoSpeed').textContent = this.gameState.autoClickSpeed;
+                
+                // Update inventory
+                document.getElementById('copper').textContent = this.gameState.inventory.copper;
+                document.getElementById('iron').textContent = this.gameState.inventory.iron;
+                document.getElementById('gold').textContent = this.gameState.inventory.gold;
+                document.getElementById('diamond').textContent = this.gameState.inventory.diamond;
+                
+                // Update shop costs and buttons
+                document.getElementById('damageCost').textContent = this.gameState.costs.damage;
+                document.getElementById('currentDamage').textContent = this.gameState.damage;
+                document.getElementById('autoClickerCost').textContent = this.gameState.costs.autoClicker;
+                document.getElementById('autoSpeedCost').textContent = this.gameState.costs.autoSpeed;
+                document.getElementById('blockCost').textContent = this.gameState.costs.block;
+                
+                // Update button states
+                document.getElementById('buyDamage').disabled = this.gameState.inventory.copper < this.gameState.costs.damage;
+                document.getElementById('buyAutoClicker').disabled = this.gameState.inventory.copper < this.gameState.costs.autoClicker || this.gameState.autoClickerUnlocked;
+                document.getElementById('buyAutoSpeed').disabled = this.gameState.inventory.iron < this.gameState.costs.autoSpeed || !this.gameState.autoClickerUnlocked;
+                document.getElementById('buyBlock').disabled = this.gameState.inventory.iron < this.gameState.costs.block || !this.hasAvailableBlockSpace();
+                
+                // Update auto-clicker indicators
+                this.showAutoClickerIndicators();
+            }
+            
+            hasAvailableBlockSpace() {
+                for (let row = 0; row < 3; row++) {
+                    for (let col = 0; col < 3; col++) {
+                        if (this.gameState.blocks[row][col] === 'empty' && this.canUnlockBlock(row, col)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            
+            saveGame() {
+                localStorage.setItem('rockBreakerSave', JSON.stringify(this.gameState));
+            }
+            
+            loadGame() {
+                const saved = localStorage.getItem('rockBreakerSave');
+                if (saved) {
+                    const savedState = JSON.parse(saved);
+                    this.gameState = { ...this.gameState, ...savedState };
+                }
+            }
+            
+            addShakeAnimation(cell) {
+                cell.classList.add('shaking');
+                setTimeout(() => {
+                    cell.classList.remove('shaking');
+                }, 500);
+            }
+            
+            addCrumbleAnimation(cell, callback) {
+                cell.classList.add('crumbling');
+                setTimeout(() => {
+                    callback();
+                }, 800);
+            }
+            
+            createParticles(cell) {
+                const rect = cell.getBoundingClientRect();
+                const particleCount = 6 + Math.floor(Math.random() * 4); // 6-9 particles
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    
+                    // Random starting position within the cell
+                    const startX = rect.left + Math.random() * rect.width;
+                    const startY = rect.top + Math.random() * rect.height;
+                    
+                    // Random fall direction
+                    const fallX = (Math.random() - 0.5) * 100; // -50 to 50 pixels
+                    const fallY = 50 + Math.random() * 100; // 50 to 150 pixels down
+                    
+                    particle.style.left = startX + 'px';
+                    particle.style.top = startY + 'px';
+                    particle.style.setProperty('--fall-x', fallX + 'px');
+                    particle.style.setProperty('--fall-y', fallY + 'px');
+                    
+                    // Vary particle colors
+                    const colors = ['#888', '#666', '#aaa', '#999', '#777'];
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    
+                    document.body.appendChild(particle);
+                    
+                    // Start animation
+                    particle.classList.add('falling');
+                    
+                    // Remove particle after animation
+                    setTimeout(() => {
+                        if (particle.parentNode) {
+                            particle.parentNode.removeChild(particle);
+                        }
+                    }, 1000);
+                }
+            }
+        }
+        
+        // Start the game when page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            new RockBreakerGame();
+        });
+    </script>
+</body>
+</html> 

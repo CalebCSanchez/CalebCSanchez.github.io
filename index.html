@@ -3,262 +3,596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Caleb Sanchez - Full-Stack Developer Portfolio</title>
+    <title>Caleb Sanchez - Full-Stack Developer</title>
+    <meta name="description" content="Full-Stack Developer specializing in .NET Framework with expertise in backend development, API creation, and performance optimization.">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-	<link rel="icon" type="image/png" href="images/favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <!-- PDF generation library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onload="console.log('jsPDF loaded successfully')" onerror="console.error('Failed to load jsPDF')"></script>
 </head>
 <body>
-	<!-- Latest Project Banner -->
-	<div id="contract-banner">
-		<span>🏠 Check out my latest project: Your House Is Not Worth That Much</span>
-		<a href="https://www.yourhouseisnotworththatmuch.com/" target="_blank" class="banner-cta">Visit Site</a>
-	</div>
-	
-	<img id="intro-image" src="images/tryClicking.png" alt="Try clicking the headers!" class="custom-image positioned-image">
-	<img id="cat-image" src="images/pictureOfCats.jpg" alt="My Kitties :)" class="cat-image hidden">
-    <header>
-        <h1><span id="typing"></span></h1>
-        <nav>
-            <ul>
-                <li><a href="#about">About Me</a></li>
-                <li><a href="#skills">Skills</a></li>
-                <li><a href="#experience">Experience</a></li>
-				<li><a href="#projects">Projects</a></li>
-                <li><a href="#education">Education</a></li>
-                <li><a href="#contact">Contact</a></li>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <h1 id="nav-title">Caleb Sanchez</h1>
+            </div>
+            <button class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+                <li><a href="#experience" class="nav-link">Experience</a></li>
+                <li><a href="#projects" class="nav-link">Projects</a></li>
+                <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#certifications" class="nav-link">Certifications</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+                <li><a href="rock-breaker.html" class="nav-link game-link">🎮 Game</a></li>
             </ul>
-			<!-- Mobile menu button -->
-			<button id="mobile-menu-btn" class="mobile-menu-btn">☰</button>
-			<div id="mobile-menu" class="mobile-menu hidden">
-				<a href="#about">About Me</a>
-				<a href="#skills">Skills</a>
-				<a href="#experience">Experience</a>
-				<a href="#projects">Projects</a>
-				<a href="#education">Education</a>
-				<a href="#contact">Contact</a>
-			</div>
-        </nav>
-    </header>
-	<main>
-		<div id="level-up">
-			<p>Level: <span id="level">1</span></p>
-			<div id="progress-container">
-				<div id="progress-bar"></div>
-			</div>
-		</div>
-		<div id="level-message" class="hidden"></div>
-			<div id="prompt-container" class="hidden">
-				<p id="prompt-message"></p>
-				<button id="yes-button">Yes</button>
-				<button id="no-button">No</button>
-		</div>
-		
-		<section id="about" class="appear">
-			<h2>About Me</h2>
-			<div class="about-content">
-				<p>Hello, I'm <strong>Caleb Sanchez</strong>, a Full-Stack Developer specializing in the .NET Framework. With a passion for backend work, I enjoy creating custom code solutions and optimizing performance in various applications.</p>
-				
-				<div class="availability-highlight">
-					<h3>🎯 What I'm Up To</h3>
-					<p>Currently working as a Software Engineer II at AIPSO, while also exploring side projects and new technologies. I'm passionate about:</p>
-					<ul class="highlight-skills">
-						<li><strong>Backend Development:</strong> C#, .NET Framework, API development</li>
-						<li><strong>Database Work:</strong> SQL Server optimization and design</li>
-						<li><strong>Performance Optimization:</strong> Code refactoring and system improvements</li>
-						<li><strong>Side Projects:</strong> Building fun tools and experimenting with new ideas</li>
-					</ul>
-				</div>
-			</div>
-		</section>
+        </div>
+    </nav>
 
-		<section id="skills" class="appear">
-			<h2>Languages and Technologies</h2>
-			<div class="skills-grid">
-				<div class="skill-category">
-					<h3>Backend</h3>
-					<ul class="bullet-points">
-						<li>C# (.NET Framework/.NET 8)</li>
-						<li>Golang</li>
-						<li>Python</li>
-						<li>SQL Server</li>
-						<li>WinForms</li>
-					</ul>
-				</div>
-				<div class="skill-category">
-					<h3>Frontend</h3>
-					<ul class="bullet-points">
-						<li>ReactJS</li>
-						<li>Blazor</li>
-						<li>HTML5/CSS3</li>
-						<li>JavaScript</li>
-					</ul>
-				</div>
-				<div class="skill-category">
-					<h3>Tools & DevOps</h3>
-					<ul class="bullet-points">
-						<li>Visual Studio 2022</li>
-						<li>Azure DevOps</li>
-						<li>Docker</li>
-						<li>Git</li>
-						<li>PowerShell</li>
-					</ul>
-				</div>
-			</div>
-		</section>
+    <!-- Level Up System -->
+    <div id="level-up-system">
+        <div id="level-display">
+            <span class="level-label">Level:</span>
+            <span id="level">1</span>
+        </div>
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+            <div id="progress-glow"></div>
+        </div>
+        <div class="level-settings">
+            <button id="settings-toggle" class="settings-toggle">
+                <span>More Options</span>
+                <span class="settings-arrow">▼</span>
+            </button>
+            <div id="settings-panel" class="settings-panel hidden">
+                <div class="setting-item">
+                    <label class="setting-label">
+                        <span>Turn Off Interactive Mode</span>
+                        <label class="toggle-switch-mini">
+                            <input type="checkbox" id="level-toggle" checked>
+                            <span class="toggle-slider-mini"></span>
+                        </label>
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <button id="restart-progress" class="restart-button">
+                        🔄 Restart Progress
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-		<section id="experience" class="appear">
-			<h2>Professional Experience</h2>
-			<div class="job">
-				<h3>Software Engineer II at AIPSO, Remote <span class="job-duration">(November 2024 - Present)</span></h3>
-				<p class="job-subtitle">Non-profit residual-market insurance services</p>
-				<ul class="bullet-points">
-					<li><strong>Underwriting-Tool Development:</strong> Enhance and maintain AIPSO's proprietary C# WinForms application that calculates rates and issues policies for state residual plans; collaborate daily with internal product owners, underwriters, QA, and BA teams to turn business rules into working code.</li>
-					<li><strong>Legacy Code Modernization:</strong> Systematically refactor large VB/early-.NET modules into maintainable C# classes, documenting patterns and building proof-of-concepts to pave a future move toward Blazor-based web UI.</li>
-					<li><strong>Defect & Feature Throughput:</strong> Resolved 90+ defects and story tickets since onboarding, improving application stability and reducing support escalations.</li>
-					<li><strong>Data Handling & Fixes:</strong> Write and correct SQL queries, stored procedures, and one-off data-repair scripts; ensure data integrity across rating tables and reporting views.</li>
-					<li><strong>Agile Delivery:</strong> Plan and ship work in four-week sprints tracked in Azure DevOps Boards; run backlog grooming, stand-ups, reviews, and retrospectives.</li>
-					<li><strong>Code Reviews & Mentorship:</strong> Conduct pull-request reviews, share debugging techniques, and mentor junior developers to raise overall code quality.</li>
-					<li><strong>Impact:</strong> Stabilized a mission-critical rating platform, accelerated new-feature delivery for multiple state plans, and laid the groundwork for AIPSO's move to modern web technologies.</li>
-				</ul>
-			</div>
-			<div class="job">
-				<h3>.NET Developer at Finys, Troy, MI <span class="job-duration">(February 2023 - November 2024)</span></h3>
-				<ul class="bullet-points">
-					<li>Developed custom code solutions for clients within our cutting-edge proprietary suite exclusively designed for the insurance industry.</li>
-					<li>Collaborated closely with clients to address defects and incorporate new requirements into their applications.</li>
-					<li>Utilized C#, Visual Studio, and IIS to deliver high-quality code ensuring seamless functionality and scalability.</li>
-					<li>Contributed to the development of the latest version of the Finys Suite, actively involved in feature implementation, performance optimization, and ensuring code readability.</li>
-					<li>Prepared and delivered training sessions to educate team members on the utilization and migration to the latest version of the Finys Suite.</li>
-				</ul>
-			</div>
-			<div class="job">
-				<h3>Software Developer at Menlo Innovations, Ann Arbor, MI <span class="job-duration">(March 2022 – February 2023)</span></h3>
-				<ul class="bullet-points">
-					<li>Primarily worked on back-end development using Golang, with occasional experience in Java using Spring Boot.</li>
-					<li>Specialized in optimizing performance through multithreading, microservice architecture, and database optimization.</li>
-					<li>Proficient in front-end technologies such as ReactJS, Python, and C#, enabling the creation of captivating website and application designs.</li>
-					<li>Adhered to scrum methodologies, sprints, and feature-branching to deliver clean and maintainable code. Prioritized code readability by leveraging design patterns and using descriptive variables.</li>
-					<li>Emphasized the importance of functional and unit testing for ensuring the reliability and functionality of applications.</li>
-					<li>Collaborated effectively in team-based environments, including paired programming methodologies.</li>
-				</ul>
-			</div>
-			<div class="job">
-				<h3>Area Manager at Amazon, Thornton, CO <span class="job-duration">(January 2021– March 2022)</span></h3>
-				<ul class="bullet-points">
-					<li>Implemented strategies that resulted in cost savings of over $4 million annually for Amazon.</li>
-					<li>Achieved a significant productivity increase of nearly 16% within the first two weeks, maintaining continuous improvement through effective employee engagement.</li>
-					<li>Utilized fulfillment center output volume and productivity metrics to optimize staffing, hiring, and indirect support assignments, minimizing profit loss.</li>
-					<li>Successfully managed daily operations and a team of 200+ employees, overseeing 70 direct reports.</li>
-					<li>Provided coaching and guidance to associates, driving productivity, quality, and maintaining high safety standards.</li>
-					<li>Fostered a positive work environment by personally engaging with 20+ employees daily, actively addressing their concerns and barriers, and supporting their personal and professional goals.</li>
-				</ul>
-			</div>
-			<div class="job">
-				<h3>Software Developer at Infosys, Raleigh, NC <span class="job-duration">(July 2019 – Feb 2020)</span></h3>
-				<ul class="bullet-points">
-					<li>Acquired comprehensive training in data science, specializing in data wrangling, data analysis, and statistical thinking.</li>
-					<li>Demonstrated expertise in software development, encompassing coding, testing, production support, and knowledge management.</li>
-				</ul>
-			</div>
-		</section>
-		
-		<section id="projects" class="appear">
-			<h2>Featured Projects</h2>
-			<p class="projects-intro">While my professional work focuses on C#/.NET, I enjoy exploring other technologies in my personal projects. Here are some applications I've built:</p>
-			
-			<div class="projects-grid">
-				<div class="project featured-project">
-					<h3><a href="https://www.yourhouseisnotworththatmuch.com/" target="_blank">Your House Is Not Worth That Much</a></h3>
-					<div class="project-tags">
-						<span class="tag">Latest Project</span>
-						<span class="tag">Web App</span>
-						<span class="tag">Real Estate</span>
-					</div>
-					<p>My newest side project - a web application focused on real estate market insights. Currently in development and expanding features based on user feedback.</p>
-					<p><strong>Status:</strong> Live and actively maintained</p>
-				</div>
-				
-				<div class="project">
-					<h3><a href="https://github.com/CalebCSanchez/MakeComputerGoNightNight" target="_blank">Make Computer Go Night Night</a></h3>
-					<div class="project-tags">
-						<span class="tag">Python</span>
-						<span class="tag">GUI</span>
-						<span class="tag">Automation</span>
-					</div>
-					<p>A sleek desktop application that automatically shuts down your computer after a specified time. Perfect for falling asleep to videos without leaving your computer running all night.</p>
-					<p><strong>Key Features:</strong> Custom timer settings, modern UI, system integration</p>
-				</div>
-				
-				<div class="project">
-					<h3><a href="https://github.com/CalebCSanchez/PythonRandomVideoPlayer" target="_blank">Python Random Video Player</a></h3>
-					<div class="project-tags">
-						<span class="tag">Python</span>
-						<span class="tag">Media</span>
-						<span class="tag">Randomization</span>
-					</div>
-					<p>Brings back the nostalgia of traditional TV by randomly playing videos from your collection - no ads, just pure entertainment!</p>
-					<p><strong>Key Features:</strong> Smart randomization, playlist management, background viewing</p>
-				</div>
-				
-				<div class="project">
-					<h3><a href="https://github.com/CalebCSanchez/PictureSorter" target="_blank">Picture Sorter</a></h3>
-					<div class="project-tags">
-						<span class="tag">Python</span>
-						<span class="tag">Image Processing</span>
-						<span class="tag">File Management</span>
-					</div>
-					<p>Intelligent duplicate photo detection and removal tool that saves hours of manual sorting through thousands of cloud storage photos.</p>
-					<p><strong>Key Features:</strong> Advanced matching algorithms, batch processing, safe deletion</p>
-				</div>
-			</div>
-		</section>
-		
-		<section id="education" class="appear">
-			<h2>Education</h2>
-			<div class="education-item">
-				<h3>Texas Tech University, Whitacre College of Engineering</h3>
-				<p class="location">Lubbock, TX</p>
-				<p><strong>Bachelor of Science, Computer Science</strong> | May 2019</p>
-				<p>Minor in Mathematics</p>
-			</div>
-		</section>
+    <!-- Sad Face Message -->
+    <div id="sad-face-message" class="sad-face-message hidden">:(</div>
 
-		<section id="contact" class="appear contact-section">
-			<h2>Let's Connect</h2>
-			<div class="contact-content">
-				<div class="contact-info">
-					<h3>Interested in discussing technology or projects?</h3>
-					<p>I'm always open to connecting with fellow developers, discussing interesting projects, or exploring new opportunities. Feel free to reach out!</p>
-					
-					<div class="availability-status">
-						<span class="status-indicator"></span>
-						<span>Open to interesting conversations</span>
-					</div>
-				</div>
-				
-				<div class="contact-links">
-					<a href="mailto:calebcsanchez1@gmail.com" class="contact-link email">
-						<span class="icon">✉</span>
-						<span>calebcsanchez1@gmail.com</span>
-					</a>
-					<a href="https://www.linkedin.com/in/calebcsanchez1" target="_blank" class="contact-link linkedin">
-						<span class="icon">💼</span>
-						<span>LinkedIn Profile</span>
-					</a>
-					<a href="https://github.com/CalebCSanchez" target="_blank" class="contact-link github">
-						<span class="icon">🐙</span>
-						<span>GitHub Portfolio</span>
-					</a>
-				</div>
-			</div>
-		</section>
-		<div id="end-space"></div>
-	</main>
-    <footer>
-        <p>&copy; 2024-2025 Caleb Sanchez | Software Engineer & Developer</p>
+    <!-- Level Messages -->
+    <div id="level-message" class="level-message hidden"></div>
+
+    <!-- Cat Prompt Modal -->
+    <div id="prompt-container" class="prompt-modal hidden">
+        <div class="prompt-content">
+            <p id="prompt-message"></p>
+            <div class="prompt-buttons">
+                <button id="yes-button" class="btn btn-yes">Yes! 🐱</button>
+                <button id="no-button" class="btn btn-no">No thanks</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cat Image -->
+    <img id="cat-image" src="images/pictureOfCats.jpg" alt="My Kitties Bean and Cheese :)" class="cat-image hidden">
+    
+    <!-- Try Clicking Image -->
+    <img id="intro-image" src="images/tryClicking.png" alt="Try clicking anywhere to level up!" class="intro-image hidden">
+    
+    <!-- Tutorial Overlay -->
+    <div id="tutorial-overlay" class="tutorial-overlay hidden">
+        <div class="tutorial-content">
+            <h3>🎮 Welcome to Interactive Mode!</h3>
+            <p>Click <strong>anywhere</strong> on my portfolio to level up and unlock surprises!</p>
+            <div class="tutorial-examples">
+                <span>📧 Email links</span>
+                <span>🔗 Project links</span> 
+                <span>⚡ Skills</span>
+                <span>📚 Experience</span>
+            </div>
+            <p class="tutorial-hint">🐱 <em>Rumor has it something adorable awaits at level 6...</em></p>
+            <div class="tutorial-actions">
+                <button id="start-clicking" class="btn btn-primary">Start Exploring! 🚀</button>
+                <div class="interactive-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="interactive-mode-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">Interactive Mode</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">
+                <span id="typing-text"></span>
+                <span class="cursor" id="cursor">|</span>
+            </h1>
+            <p class="hero-subtitle">Full-Stack Developer</p>
+            <p class="hero-description">Specializing in .NET Framework with expertise in backend development, API creation, and performance optimization</p>
+            <div class="hero-buttons">
+                <button id="generate-resume" class="btn btn-primary">📄 Generate Resume</button>
+                <a href="#contact" class="btn btn-secondary">📧 Contact Me</a>
+            </div>
+            <div class="availability-status">
+                <span class="status-dot"></span>
+                <span>Available for contract work and consulting</span>
+            </div>
+        </div>
+        <div class="hero-background">
+            <div class="floating-code">
+                <span>C#</span>
+                <span>.NET</span>
+                <span>SQL</span>
+                <span>React</span>
+                <span>Python</span>
+                <span>Go</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>Hello, I'm <strong>Caleb Sanchez</strong>, a passionate Full-Stack Developer with a knack for solving complex problems and delivering high-quality solutions. With expertise in .NET, SQL, and various development tools, I thrive in dynamic environments where innovation meets client satisfaction.</p>
+                    <p>Currently working as a Software Engineer II at AIPSO, I enhance proprietary underwriting applications and modernize legacy systems. My experience spans insurance industry solutions, release management, and team leadership, always with an emphasis on clean, maintainable code and mentoring junior developers.</p>
+                    <p>I am continuously exploring new technologies, particularly in <strong>AI and backend development</strong>, and enjoy working on projects that push the boundaries of what's possible. Outside of work, I'm an avid runner and gamer, always seeking new challenges and adventures.</p>
+                    <div class="about-highlights">
+                        <h3>What drives me:</h3>
+                        <ul>
+                            <li><strong>Technical Leadership:</strong> Led development teams, orchestrated releases, and mentored developers</li>
+                            <li><strong>Performance Engineering:</strong> I enjoy increasing performance</li>
+                            <li><strong>Legacy Modernization:</strong> Systematically refactoring VB/early-.NET to modern C# architectures</li>
+                            <li><strong>Innovation:</strong> Exploring AI technologies and building proof-of-concepts for future web migrations</li>
+                            <li><strong>Problem Solving:</strong> Resolved 90+ defects while delivering 200+ feature tickets</li>
+                            <li><strong>Security Focus:</strong> Background in ethical hacking, penetration testing, and malware research</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section">
+        <div class="container">
+            <h2 class="section-title">Professional Experience</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Nov 2024 - Present</div>
+                    <div class="timeline-content">
+                        <h3>Software Engineer II</h3>
+                        <h4>AIPSO, Remote</h4>
+                        <p class="company-description">Non-profit residual-market insurance services</p>
+                        <ul>
+                            <li><strong>Underwriting-Tool Development:</strong> Enhance and maintain AIPSO's proprietary C# WinForms application that calculates rates and issues policies for state residual plans; collaborate daily with internal product owners, underwriters, QA, and BA teams to turn business rules into working code</li>
+                            <li><strong>Legacy Code Modernization:</strong> Systematically refactor large VB/early-.NET modules into maintainable C# classes, documenting patterns and building proof-of-concepts to pave a future move toward Blazor-based web UI</li>
+                            <li><strong>Defect & Feature Throughput:</strong> Resolved 90+ defects and story tickets since onboarding, improving application stability and reducing support escalations</li>
+                            <li><strong>Data Handling & Fixes:</strong> Write and correct SQL queries, stored procedures, and one-off data-repair scripts; ensure data integrity across rating tables and reporting views</li>
+                            <li><strong>Agile Delivery:</strong> Plan and ship work in four-week sprints tracked in Azure DevOps Boards; run backlog grooming, stand-ups, reviews, and retrospectives</li>
+                            <li><strong>Code Reviews & Mentorship:</strong> Conduct pull-request reviews, share debugging techniques, and mentor junior developers to raise overall code quality</li>
+                            <li><strong>Technology Stack:</strong> Visual Studio 2022, C#/.NET 8, WinForms, classic VB, SQL Server 2019 (on-prem & AWS RDS), Git (Azure DevOps Repos), PowerShell, diff/profiling utilities</li>
+                            <li><strong>Impact:</strong> Stabilized a mission-critical rating platform, accelerated new-feature delivery for multiple state plans, and laid the groundwork for AIPSO's move to modern web technologies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Mar 2025 - Aug 2025</div>
+                    <div class="timeline-content">
+                        <h3>Contract Software Developer</h3>
+                        <h4>Plato's Closet, Remote</h4>
+                        <p class="company-description">Retail cash management software modernization</p>
+                        <ul>
+                            <li><strong>Cash Variance System Modernization:</strong> Revitalized legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server, resolving critical variance calculation bugs that were causing incorrect negative variance reporting</li>
+                            <li><strong>Full-Stack Bug Resolution:</strong> Diagnosed and fixed complex variance calculation logic in both frontend React components and backend stored procedures, ensuring accurate cash flow tracking for retail operations</li>
+                            <li><strong>Rapid Deployment & Testing:</strong> Delivered fully functional solution within 2 months, including comprehensive testing of cash count workflows, fund transfers, and variance audit trails</li>
+                            <li><strong>Modern UI Implementation:</strong> Built responsive cash management interface using React with Tailwind CSS, PrimeReact components, and Chart.js for data visualization, improving user experience for daily cash operations</li>
+                            <li><strong>Database Optimization:</strong> Optimized SQL stored procedures for cash count calculations, fund transfers, and variance reporting, ensuring data integrity across all financial operations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Feb 2023 - Nov 2024</div>
+                    <div class="timeline-content">
+                        <h3>Lead .NET Full-Stack Developer and Release Manager</h3>
+                        <h4>Finys, Troy, MI</h4>
+                        <p class="company-description">Insurance industry software solutions</p>
+                        <ul>
+                            <li><strong>Insurance Line Development:</strong> Built and upgraded a new farm-insurance line for the state of Maine, integrating it with existing carrier frameworks and policy modules</li>
+                            <li><strong>Client Collaboration:</strong> Coordinated daily with the client's project lead and six-person team to clarify requirements, demo iterations, and hit delivery targets</li>
+                            <li><strong>Release Management:</strong> Orchestrated three production releases, synchronizing developers, QA builds, configuration promotion, and post-release support</li>
+                            <li><strong>Technology Stack:</strong> SQL Server Management Studio 18, .NET Framework 4.x (C#/VB), Visual Studio 2017, IIS, in-house screen-builder framework, Source Control Explorer/TFS, Visual Build Professional 9</li>
+                            <li><strong>Key Achievements:</strong> Implemented commissions, reporting, and policy-management modules; introduced performance tweaks that trimmed ~0.5s from every transaction; delivered 200+ tickets across new features and defects</li>
+                            <li><strong>Training & Mentorship:</strong> Trained teammates on the new framework and strengthened communication, time-management, and problem-solving skills</li>
+                            <li><strong>Impact:</strong> Enabled 116 agents to quote and bind policies more efficiently</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Mar 2022 - Feb 2023</div>
+                    <div class="timeline-content">
+                        <h3>Software Developer</h3>
+                        <h4>Menlo Innovations, Ann Arbor, MI</h4>
+                        <ul>
+                            <li>Primarily worked on back-end development using Golang, with experience in Java using Spring Boot</li>
+                            <li>Specialized in optimizing performance through multithreading and microservice architecture</li>
+                            <li>Proficient in front-end technologies such as ReactJS, Python, and C#</li>
+                            <li>Adhered to scrum methodologies and feature-branching for maintainable code</li>
+                            <li>Emphasized functional and unit testing for application reliability</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Jan 2021 - Mar 2022</div>
+                    <div class="timeline-content">
+                        <h3>Area Manager</h3>
+                        <h4>Amazon, Thornton, CO</h4>
+                        <ul>
+                            <li>Implemented strategies resulting in cost savings of over $4 million annually</li>
+                            <li>Achieved 16% productivity increase within first two weeks through employee engagement</li>
+                            <li>Managed daily operations and team of 200+ employees with 70 direct reports</li>
+                            <li>Utilized fulfillment center metrics to optimize staffing and minimize profit loss</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-date">Jul 2019 - Feb 2020</div>
+                    <div class="timeline-content">
+                        <h3>Software Developer</h3>
+                        <h4>Infosys, Raleigh, NC</h4>
+                        <ul>
+                            <li>Comprehensive training in data science, specializing in data wrangling and statistical thinking</li>
+                            <li>Expertise in software development encompassing coding, testing, and production support</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section">
+        <div class="container">
+            <h2 class="section-title">Featured Projects</h2>
+            <p class="section-description">While my professional work focuses on C#/.NET, I enjoy exploring other technologies in my personal projects.</p>
+            
+            <div class="projects-grid">
+                <div class="project-card featured">
+                    <div class="project-header">
+                        <h3><a href="https://www.yourhouseisnotworththatmuch.com/" target="_blank">Your House Is Not Worth That Much</a></h3>
+                        <div class="project-tags">
+                            <span class="tag latest">Latest Project</span>
+                            <span class="tag">Web App</span>
+                            <span class="tag">Real Estate</span>
+                        </div>
+                    </div>
+                    <p>My newest side project - a web application focused on real estate market insights. Currently in development and expanding features based on user feedback.</p>
+                    <p class="project-status"><strong>Status:</strong> Live and actively maintained</p>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3><a href="https://github.com/CalebCSanchez/MakeComputerGoNightNight" target="_blank">Make Computer Go Night Night</a></h3>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">GUI</span>
+                            <span class="tag">Automation</span>
+                        </div>
+                    </div>
+                    <p>A sleek desktop application that automatically shuts down your computer after a specified time. Perfect for falling asleep to videos without leaving your computer running all night.</p>
+                    <p class="project-features"><strong>Key Features:</strong> Custom timer settings, modern UI, system integration</p>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3><a href="https://github.com/CalebCSanchez/PythonRandomVideoPlayer" target="_blank">Python Random Video Player</a></h3>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Media</span>
+                            <span class="tag">Randomization</span>
+                        </div>
+                    </div>
+                    <p>Brings back the nostalgia of traditional TV by randomly playing videos from your collection - no ads, just pure entertainment!</p>
+                    <p class="project-features"><strong>Key Features:</strong> Smart randomization, playlist management, background viewing</p>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3><a href="https://github.com/CalebCSanchez/PictureSorter" target="_blank">Picture Sorter</a></h3>
+                        <div class="project-tags">
+                            <span class="tag">Python</span>
+                            <span class="tag">Image Processing</span>
+                            <span class="tag">File Management</span>
+                        </div>
+                    </div>
+                    <p>Intelligent duplicate photo detection and removal tool that saves hours of manual sorting through thousands of cloud storage photos.</p>
+                    <p class="project-features"><strong>Key Features:</strong> Advanced matching algorithms, batch processing, safe deletion</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section">
+        <div class="container">
+            <h2 class="section-title">Technical Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Backend Technologies</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <span class="skill-name">C# (.NET Framework/.NET 8)</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">SQL Server</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Golang</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Python</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">WinForms</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">ASP.NET</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Java (Spring Boot)</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Frontend Technologies</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <span class="skill-name">ReactJS</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Blazor</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">HTML5/CSS3</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">JavaScript</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-category">
+                    <h3>Tools & DevOps</h3>
+                    <div class="skills-list">
+                        <div class="skill-item">
+                            <span class="skill-name">Visual Studio 2022</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Azure DevOps</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Docker</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Git</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">PowerShell</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">IIS</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Jenkins</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 70%"></div>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">JIRA</span>
+                            <div class="skill-bar">
+                                <div class="skill-progress" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="section">
+        <div class="container">
+            <h2 class="section-title">Education</h2>
+            <div class="education-item">
+                <h3>Texas Tech University, Whitacre College of Engineering</h3>
+                <p class="location">Lubbock, TX</p>
+                <p class="degree"><strong>Bachelor of Science, Computer Science</strong> | May 2019</p>
+                <p class="minor">Minor in Mathematics</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Certifications Section -->
+    <section id="certifications" class="section">
+        <div class="container">
+            <h2 class="section-title">Certifications & Leadership</h2>
+            <div class="certifications-grid">
+                <div class="cert-category">
+                    <h3>Professional Certifications</h3>
+                    <div class="cert-list">
+                        <div class="cert-item">
+                            <span class="cert-name">IT and Security Risk Assessment</span>
+                            <span class="cert-type">Security</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-name">Ethical Hacking and Penetration Testing</span>
+                            <span class="cert-type">Security</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cert-category">
+                    <h3>Leadership Experience</h3>
+                    <div class="cert-list">
+                        <div class="cert-item">
+                            <span class="cert-name">Director of Malware Research</span>
+                            <span class="cert-type">RISA at Texas Tech (2017-2018)</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-name">IT Student Supervisor</span>
+                            <span class="cert-type">Texas Tech University (2018-2019)</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-name">IT Knowledge Management Lead</span>
+                            <span class="cert-type">Texas Tech University (2018-2019)</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="cert-category">
+                    <h3>Awards & Recognition</h3>
+                    <div class="cert-list">
+                        <div class="cert-item">
+                            <span class="cert-name">Most Improved Player "Ever"</span>
+                            <span class="cert-type">Achievement</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-name">Top 5% AMC 12 Contest</span>
+                            <span class="cert-type">Academic</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-name">Rotary Youth Leadership Award</span>
+                            <span class="cert-type">Leadership</span>
+                        </div>
+                        <div class="cert-item">
+                            <span class="cert-name">Scholar Athlete</span>
+                            <span class="cert-type">Academic</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section">
+        <div class="container">
+            <h2 class="section-title">Let's Connect</h2>
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h3>Interested in discussing technology or projects?</h3>
+                    <p>I'm always open to connecting with fellow developers, discussing interesting projects, or exploring new opportunities. Feel free to reach out!</p>
+                    
+                    <div class="availability-status">
+                        <span class="status-dot"></span>
+                        <span>Open to interesting conversations</span>
+                    </div>
+                </div>
+                
+                <div class="contact-links">
+                    <a href="mailto:calebcsanchez1@gmail.com" class="contact-link">
+                        <span class="icon">✉</span>
+                        <span>calebcsanchez1@gmail.com</span>
+                    </a>
+                    <a href="https://www.linkedin.com/in/calebcsanchez1" target="_blank" class="contact-link">
+                        <span class="icon">💼</span>
+                        <span>LinkedIn Profile</span>
+                    </a>
+                    <a href="https://github.com/CalebCSanchez" target="_blank" class="contact-link">
+                        <span class="icon">🐙</span>
+                        <span>GitHub Portfolio</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024-2025 Caleb Sanchez | Software Engineer & Developer</p>
+        </div>
     </footer>
 
+    <!-- JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
