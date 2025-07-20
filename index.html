@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <!-- PDF generation library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onload="console.log('jsPDF loaded successfully')" onerror="console.error('Failed to load jsPDF')"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" onerror="console.error('Failed to load jsPDF')"></script>
 </head>
 <body>
     <!-- Navigation -->
@@ -130,6 +130,14 @@
             <div class="hero-buttons">
                 <button id="generate-resume" class="btn btn-primary">📄 Generate Resume</button>
                 <a href="#contact" class="btn btn-secondary">📧 Contact Me</a>
+            </div>
+            <div class="latest-project-banner">
+                <div class="banner-content">
+                    <span class="banner-text">🚀 Check out my latest project:</span>
+                    <a href="https://www.yourhouseisnotworththatmuch.com/" target="_blank" class="banner-link">
+                        Your House Is Not Worth That Much
+                    </a>
+                </div>
             </div>
             <div class="availability-status">
                 <span class="status-dot"></span>
@@ -592,7 +600,11 @@
         </div>
     </footer>
 
-    <!-- JavaScript -->
-    <script src="script.js"></script>
+    <!-- JavaScript Modules -->
+    <script src="js/utils/helpers.js"></script>
+    <script src="js/core/portfolio.js"></script>
+    <script src="js/features/leveling-system.js"></script>
+    <script src="js/features/pdf-generator.js"></script>
+    <script src="js/init.js"></script>
 </body>
 </html>
