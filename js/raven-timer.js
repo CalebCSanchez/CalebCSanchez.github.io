@@ -37,6 +37,19 @@
   try{ fallbackAudio.raven = new Audio('raven.mp3'); fallbackAudio.raven.loop = true; }catch(e){ fallbackAudio.raven = null; }
   try{ fallbackAudio.scroll = new Audio('ScrollOpen.mp3'); fallbackAudio.scroll.loop = false; }catch(e){ fallbackAudio.scroll = null; }
 
+  function saveAudioSetting(){
+    try{ localStorage.setItem(STORAGE_KEYS.SOUND, JSON.stringify(!!soundEnabled)); }catch(e){}
+  }
+
+  function loadAudioSetting(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEYS.SOUND);
+      if(raw === null) { soundEnabled = true; return; }
+      const v = JSON.parse(raw);
+      soundEnabled = !!v;
+    }catch(e){ soundEnabled = true; }
+  }
+
   // initialize AudioContext and fetch buffers (called lazily when needed)
   async function _ensureAudioContext(){
     if(!soundEnabled) return;
@@ -139,6 +152,9 @@
     NAMES: 'raven_names_v1',
     GAME: 'raven_game_v1'
   };
+
+  // persisted audio preference
+  STORAGE_KEYS.SOUND = 'raven_sound_v1';
 
   // helper to render letter text with an embellished initial
   function setLetterText(txt){
@@ -653,6 +669,41 @@
     });
   }
 
+  // create a fixed top-left audio toggle that persists preference
+  function createTopLeftAudioToggle(){
+    try{
+      if(document.getElementById('audio-toggle-top-left')) return;
+      const wrap = document.createElement('div');
+      wrap.id = 'audio-toggle-top-left';
+      wrap.className = 'audio-toggle-top-left';
+      const lbl = document.createElement('label');
+      lbl.style.display = 'inline-flex';
+      lbl.style.alignItems = 'center';
+      lbl.style.cursor = 'pointer';
+      lbl.title = 'Toggle site audio';
+      const chk = document.createElement('input');
+      chk.type = 'checkbox';
+      try{ chk.checked = !!soundEnabled; }catch(e){ chk.checked = true; }
+      // small icon that reflects state
+      const icon = document.createElement('span');
+      icon.className = 'audio-icon';
+      icon.style.userSelect = 'none';
+      icon.textContent = chk.checked ? '🔊' : '🔇';
+      // structure: input then icon so clicking label toggles checkbox
+      lbl.appendChild(chk);
+      lbl.appendChild(icon);
+      wrap.appendChild(lbl);
+      document.body.appendChild(wrap);
+      chk.addEventListener('change', ()=>{
+        soundEnabled = !!chk.checked;
+        saveAudioSetting();
+        if(soundEnabled && _AudioContext){ _ensureAudioContext().catch(()=>{}); }
+        if(!soundEnabled){ _stopAudioNamed('raven'); _stopAudioNamed('newHand'); _stopAudioNamed('scroll'); }
+        try{ icon.textContent = chk.checked ? '🔊' : '🔇'; }catch(e){}
+      });
+    }catch(e){}
+  }
+
   if(intervalMin) intervalMin.addEventListener('change', ()=>{ if(!inEvent) startTimer(); });
   if(intervalSec) intervalSec.addEventListener('change', ()=>{ if(!inEvent) startTimer(); });
   timerToggle.addEventListener('change', ()=>{ if(timerToggle.checked) startTimer(); else stopTimer(); });
@@ -662,6 +713,9 @@
   createWeightsPanel();
   // load persisted names first so inputs reflect saved list
   loadNames();
+  // load audio preference and create UI
+  loadAudioSetting();
+  createTopLeftAudioToggle();
   // then restore any running game
   loadGameState();
 
@@ -696,18 +750,17 @@
       audioToggleWrap.style.cursor = 'pointer';
       audioToggleWrap.title = 'Toggle site audio (attempt mixing via WebAudio)';
       const chk = document.createElement('input');
-      chk.type = 'checkbox'; chk.checked = true; chk.style.marginRight = '6px';
+      chk.type = 'checkbox'; chk.style.marginRight = '6px';
+      try{ chk.checked = !!soundEnabled; }catch(e){ chk.checked = true; }
       audioToggleWrap.appendChild(chk);
       const txt = document.createTextNode('Site audio');
       audioToggleWrap.appendChild(txt);
       btn.insertAdjacentElement('afterend', audioToggleWrap);
       chk.addEventListener('change', (e)=>{
         soundEnabled = !!chk.checked;
+        saveAudioSetting();
         if(soundEnabled && _AudioContext){ _ensureAudioContext().catch(()=>{}); }
-        if(!soundEnabled){
-          // stop any playing sounds
-          _stopAudioNamed('raven'); _stopAudioNamed('newHand'); _stopAudioNamed('scroll');
-        }
+        if(!soundEnabled){ _stopAudioNamed('raven'); _stopAudioNamed('newHand'); _stopAudioNamed('scroll'); }
       });
 
       btn.addEventListener('click', (e)=>{

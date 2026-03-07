@@ -43,6 +43,39 @@ body {
     box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* Top-left floating audio toggle for raven timer */
+.audio-toggle-top-left {
+    position: fixed;
+    top: 8px;
+    left: 8px;
+    z-index: 9999;
+    background: rgba(0,0,0,0.45);
+    padding: 4px;
+    border-radius: 6px;
+    color: #fff;
+    font-weight: 700;
+    backdrop-filter: blur(6px);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.audio-toggle-top-left input[type='checkbox'] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.audio-toggle-top-left .audio-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+}
+
 .nav-container {
     display: flex;
     justify-content: space-between;
