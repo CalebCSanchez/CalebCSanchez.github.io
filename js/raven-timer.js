@@ -23,6 +23,24 @@
   const rollLog = document.getElementById('roll-log');
   const btnReset = document.getElementById('btn-reset');
 
+  // Audio assets
+  let audioNewHand = null; // newHand.mp3 (play once when purple raven appears)
+  let audioBlack = null;   // raven.mp3 (loop while black raven visible)
+  let audioScroll = null;  // ScrollOpen.mp3 (play once when modal opens)
+
+  try{
+    audioNewHand = new Audio('newHand.mp3'); audioNewHand.loop = false;
+  }catch(e){ audioNewHand = null; }
+  try{
+    audioBlack = new Audio('raven.mp3'); audioBlack.loop = true;
+  }catch(e){ audioBlack = null; }
+  try{
+    audioScroll = new Audio('ScrollOpen.mp3'); audioScroll.loop = false;
+  }catch(e){ audioScroll = null; }
+
+  function _playAudio(a){ if(!a) return; try{ const p = a.play(); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
+  function _stopAudio(a){ if(!a) return; try{ a.pause(); a.currentTime = 0; }catch(e){} }
+
   let intervalId = null;
   let tickSeconds = 0;
   let chance = 0.5; // starts at 50%
@@ -263,6 +281,9 @@
       openHandChangeLetter();
     });
     ravenContainer.appendChild(raven);
+    // play newHand once for purple raven appearance
+    _stopAudio(audioBlack);
+    _playAudio(audioNewHand);
   }
 
   function startHandChangeTimer(){
@@ -291,6 +312,9 @@
     letterContent.textContent = 'A new Hand must be chosen.';
     // ensure next button enabled
     if(letterNext) { letterNext.disabled = false; }
+    // stop any playing new-hand audio and play scroll once
+    _stopAudio(audioNewHand);
+    _playAudio(audioScroll);
     letterModal.classList.add('open');
   }
 
@@ -359,6 +383,9 @@
     `;
     raven.addEventListener('click', ()=>openLetter());
     ravenContainer.appendChild(raven);
+    // start black raven loop audio
+    _stopAudio(audioNewHand);
+    _playAudio(audioBlack);
   }
 
   function clearRaven(){ ravenContainer.innerHTML = ''; }
@@ -413,6 +440,9 @@
   function openLetter(){
     // show modal and make overlay follow scroll
     if(!letterModal) return;
+    // stop black raven audio immediately and play scroll once
+    _stopAudio(audioBlack);
+    _playAudio(audioScroll);
     // simply open modal; CSS `position:fixed` keeps it covering the viewport
     letterModal.classList.add('open');
   }
