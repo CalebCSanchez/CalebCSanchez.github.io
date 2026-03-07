@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Raven Timer</title>
+  <link rel="stylesheet" href="css/raven-timer.css">
+</head>
+<body>
+  <main class="app">
+    <section id="intro" class="screen center">
+      <h1 class="title">The Raven's Keep</h1>
+      <p class="lead">Welcome, noble one. Call forth the raven and let fate choose who rises to action.</p>
+      <button id="btn-begin" class="btn primary large">Open the Raven's Keep</button>
+    </section>
+
+    <section id="setup" class="screen hidden">
+      <h2>List the Court</h2>
+      <form id="names-form">
+        <div class="row"><label>King</label><input name="king" placeholder="Name of the King" required></div>
+        <div class="row"><label>Hand</label><input name="hand" placeholder="Name of the Hand" required></div>
+        <div id="commoners" class="commoners"></div>
+        <div class="controls-row">
+          <button type="button" id="add-commoner" class="btn">+ Add</button>
+          <button type="button" id="remove-commoner" class="btn">− Remove</button>
+        </div>
+        <div class="actions">
+          <button id="btn-start-game" class="btn primary large" type="button">Start the Game</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="play" class="screen hidden">
+      <header class="play-header">
+      </header>
+
+      <div class="play-area">
+        <div class="nest-area">
+          <div id="nest" class="nest" aria-live="polite">
+            <div class="nest-label">The Nest</div>
+            <div id="raven-container" class="raven-container"></div>
+          </div>
+
+          <div class="nest-controls">
+            <button id="call-raven" class="btn primary large">Call the Raven</button>
+            <button id="edit-names" class="btn">Change List Names</button>
+          </div>
+        </div>
+
+        <div class="info-panel">
+          <div>Chance: <span id="chance-display">50%</span></div>
+          <div>Next roll in: <span id="countdown">—</span></div>
+
+          <details id="interval-details" class="prob-panel">
+            <summary>Change Interval</summary>
+            <div class="interval-inputs">
+              <label>Minutes <input id="interval-min" type="number" min="0" value="1"></label>
+              <label>Seconds <input id="interval-sec" type="number" min="0" max="59" value="30"></label>
+              <div class="detail-actions"><label class="toggle"><input id="timer-toggle" type="checkbox" checked> Timer On</label></div>
+            </div>
+          </details>
+
+          <details id="probability-details" class="prob-panel">
+            <summary>Show Probability</summary>
+            <div class="roll-log" id="roll-log"></div>
+            <div class="detail-actions"><button id="btn-reset" class="btn small">Reset Chance</button></div>
+          </details>
+        </div>
+      </div>
+
+    </section>
+
+    <div id="letter-modal" class="modal" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div id="letter-content" class="letter"></div>
+        <div class="modal-actions">
+          <button id="letter-next" class="btn primary">Continue</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/raven-timer.js"></script>
+</body>
+</html>
