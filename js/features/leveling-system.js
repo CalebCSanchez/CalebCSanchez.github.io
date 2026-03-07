@@ -34,13 +34,17 @@ class LevelingSystem {
         this.settingsPanel = document.getElementById('settings-panel');
         this.restartButton = document.getElementById('restart-progress');
         
-        // Interactive mode state
-        this.interactiveMode = this.getCookie('interactiveMode') !== 'false'; // Default to true
+        // Load interactive mode state from cookie
+        const savedMode = this.getCookie('interactiveMode');
+        this.interactiveMode = savedMode !== 'false'; // Default to true if not set
         
         // Initialize display with saved values
         this.updateLevelDisplay();
         this.updateProgressBar();
         this.initializeToggleStates();
+        
+        // Apply boring mode immediately if interactive mode is disabled
+        this.applyInitialMode();
         
         this.setupLevelingEventListeners();
         this.showHintSystem();
@@ -156,6 +160,15 @@ class LevelingSystem {
         this.updateInteractiveModeUI();
     }
     
+    applyInitialMode() {
+        // Apply the correct mode based on the saved state without showing notifications
+        if (!this.interactiveMode) {
+            this.enableBoringMode(false); // false = don't show notification
+        } else {
+            this.disableBoringMode();
+        }
+    }
+    
     toggleInteractiveMode(enabled) {
         this.interactiveMode = enabled;
         this.setCookie('interactiveMode', enabled.toString(), 365);
@@ -176,8 +189,11 @@ class LevelingSystem {
             this.hideCatImage();
             this.hideTutorial();
             this.hideIntroImage();
-            this.showSadFace();
+            // Switch to boring mode
+            this.enableBoringMode(true); // true = show notification
         } else {
+            // Switch back to fun mode
+            this.disableBoringMode();
             this.reviveLevelSystem();
         }
     }
@@ -561,6 +577,53 @@ class LevelingSystem {
     hideHintSystem() {
         this.hideIntroImage();
         this.hideTutorial();
+    }
+
+    // Boring Mode Functions
+    enableBoringMode(showNotification = true) {
+        document.body.classList.add('boring-mode');
+        if (showNotification) {
+            this.showBoringModeMessage();
+        }
+    }
+
+    disableBoringMode() {
+        document.body.classList.remove('boring-mode');
+    }
+
+    showBoringModeMessage() {
+        // Create a subtle notification that we're in boring mode
+        const notification = document.createElement('div');
+        notification.className = 'boring-mode-notification';
+        notification.innerHTML = `
+            <div style="
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(44, 62, 80, 0.95);
+                color: white;
+                padding: 2rem;
+                border-radius: 8px;
+                text-align: center;
+                z-index: 10000;
+                font-family: Arial, sans-serif;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            ">
+                <h3 style="margin: 0 0 1rem 0; color: #ecf0f1;">Corporate Mode Activated</h3>
+                <p style="margin: 0; color: #bdc3c7; font-size: 14px;">Welcome to the boring, traditional portfolio experience.</p>
+                <p style="margin: 0.5rem 0 0 0; color: #95a5a6; font-size: 12px;">Toggle Interactive Mode back on to restore the fun!</p>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Remove notification after 4 seconds
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 4000);
     }
 }
 

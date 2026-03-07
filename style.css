@@ -1971,3 +1971,259 @@ input:checked + .toggle-slider-mini:before {
         padding: 0.5rem 0.8rem;
     }
 }
+
+/* Boring Mode - Traditional Portfolio Styling */
+body.boring-mode {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 50%, #dee2e6 100%);
+    font-family: 'Arial', 'Helvetica', sans-serif;
+    color: #333;
+}
+
+body.boring-mode .navbar {
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.boring-mode .nav-brand h1 {
+    color: #2c3e50;
+    text-shadow: none;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+}
+
+body.boring-mode .nav-link {
+    color: #2c3e50;
+    transition: none;
+}
+
+body.boring-mode .nav-link:hover,
+body.boring-mode .nav-link.active {
+    color: #3498db;
+    background: rgba(52, 152, 219, 0.1);
+    transform: none;
+}
+
+body.boring-mode .nav-link::after {
+    background: #3498db;
+}
+
+body.boring-mode .hero {
+    background: none;
+}
+
+body.boring-mode .hero::before {
+    display: none;
+}
+
+body.boring-mode .hero-title {
+    color: #2c3e50;
+    text-shadow: none;
+    font-family: 'Arial', sans-serif;
+}
+
+body.boring-mode .hero-subtitle {
+    color: #7f8c8d;
+}
+
+body.boring-mode .hero-description {
+    color: #5d6d7e;
+}
+
+body.boring-mode .btn-primary {
+    background: linear-gradient(45deg, #3498db, #2980b9);
+    color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+body.boring-mode .btn-primary:hover {
+    transform: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+body.boring-mode .btn-secondary {
+    background: rgba(149, 165, 166, 0.2);
+    color: #2c3e50;
+    border: 1px solid #bdc3c7;
+}
+
+body.boring-mode .btn-secondary:hover {
+    background: rgba(149, 165, 166, 0.3);
+    transform: none;
+}
+
+/* Hide fun elements in boring mode */
+body.boring-mode .latest-project-banner {
+    display: none;
+}
+
+body.boring-mode .floating-code {
+    display: none;
+}
+
+body.boring-mode .availability-status .status-dot {
+    background: #27ae60;
+    animation: none;
+}
+
+body.boring-mode .section-title {
+    color: #2c3e50;
+    text-shadow: none;
+}
+
+body.boring-mode .timeline::before {
+    background: #bdc3c7;
+}
+
+body.boring-mode .timeline-item::before {
+    background: #3498db;
+    animation: none;
+}
+
+body.boring-mode .timeline-content {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ecf0f1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.boring-mode .timeline-content h3 {
+    color: #2c3e50;
+}
+
+body.boring-mode .timeline-content h4 {
+    color: #3498db;
+}
+
+body.boring-mode .project-card {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ecf0f1;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+body.boring-mode .project-card:hover {
+    transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+body.boring-mode .project-card h3 a {
+    color: #2c3e50;
+}
+
+body.boring-mode .skill-category {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ecf0f1;
+}
+
+body.boring-mode .skill-progress {
+    background: linear-gradient(90deg, #3498db, #2980b9);
+}
+
+body.boring-mode .contact-link {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #ecf0f1;
+    color: #2c3e50;
+}
+
+body.boring-mode .contact-link:hover {
+    background: rgba(52, 152, 219, 0.1);
+    transform: none;
+}
+
+body.boring-mode .footer {
+    background: rgba(44, 62, 80, 0.95);
+    color: #ecf0f1;
+}
+
+/* Hide interactive elements in boring mode but keep level system greyed out */
+body.boring-mode #cat-image,
+body.boring-mode #intro-image,
+body.boring-mode #tutorial-overlay,
+body.boring-mode #prompt-container,
+body.boring-mode #level-message {
+    display: none !important;
+}
+
+/* Grey out level system in boring mode but keep it visible */
+body.boring-mode #level-up-system {
+    opacity: 0.4;
+    background: rgba(108, 117, 125, 0.7) !important;
+    border-color: rgba(108, 117, 125, 0.5) !important;
+    pointer-events: none;
+}
+
+/* Mode face styling */
+.mode-face-message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    font-size: 4rem;
+    opacity: 0.8;
+    color: #ffd93d;
+    z-index: 1001;
+    pointer-events: none;
+    transition: all 0.5s ease;
+    text-shadow: 0 0 20px rgba(255, 217, 61, 0.6);
+    animation: facePulse 3s infinite ease-in-out;
+}
+
+body.boring-mode .mode-face-message {
+    opacity: 1;
+    color: #6c757d;
+    text-shadow: none;
+    animation: none;
+}
+
+body.boring-mode .mode-face-message::before {
+    content: '😞';
+}
+
+body:not(.boring-mode) .mode-face-message::before {
+    content: '😊';
+}
+
+@keyframes facePulse {
+    0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+    }
+}
+
+/* Disable all animations in boring mode */
+body.boring-mode * {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* Allow only basic hover transitions for usability */
+body.boring-mode .nav-link,
+body.boring-mode .btn,
+body.boring-mode .contact-link,
+body.boring-mode .project-card {
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+/* Corporate-style headings */
+body.boring-mode h1,
+body.boring-mode h2,
+body.boring-mode h3 {
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Remove special styling from game link */
+body.boring-mode .game-link {
+    background: none !important;
+    color: #2c3e50 !important;
+    animation: none !important;
+    font-weight: normal !important;
+}
+
+body.boring-mode .game-link:hover {
+    color: #3498db !important;
+    background: rgba(52, 152, 219, 0.1) !important;
+}
