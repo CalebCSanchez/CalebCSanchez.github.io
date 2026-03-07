@@ -149,6 +149,16 @@
     letterContent.innerHTML = `<p><span class="initial">${first}</span>${rest}</p>`;
   }
 
+  // escape HTML to avoid injection when inserting names into innerHTML
+  function escapeHtml(s){
+    return String(s || '')
+      .replace(/&/g,'&amp;')
+      .replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;')
+      .replace(/\"/g,'&quot;')
+      .replace(/'/g,'&#39;');
+  }
+
   // Ensure at least 2 commoners so total >=4 (King+Hand+2 commoners)
   function ensureInitialCommoners(){
     const needed = 2 - commonersEl.children.length;
@@ -522,8 +532,8 @@
     // persist updated game state
     saveGameState();
 
-    // prepare letter text
-    setLetterText(`Hear ye! By raven's beak and royal decree, ${chosen} is called to action: "Rise and answer the clarion of duty!"`);
+    // prepare letter text (bold the chosen name)
+    setLetterText(`Hear ye! By raven's beak and royal decree, <strong>${escapeHtml(chosen)}</strong> is called to action: "Rise and answer the clarion of duty!"`);
     // show letter modal on first click of raven
     // we will wait for user to click raven which opens letter via click handler attached earlier
   }
