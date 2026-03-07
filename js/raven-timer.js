@@ -27,6 +27,7 @@
   let tickSeconds = 0;
   let chance = 0.5; // starts at 50%
   let timerOn = true;
+  // players will be an array of objects: { name, baseWeight, effectiveWeight, skipped }
   let players = [];
   let inEvent = false;
   let _modalScrollHandler = null;
@@ -86,7 +87,9 @@
     const hand = document.querySelector('input[name=hand]').value.trim() || 'Hand Unknown';
     const commonerInputs = Array.from(commonersEl.querySelectorAll('input'));
     const commons = commonerInputs.map(i => i.value.trim() || 'Commoner');
-    players = [king, hand, ...commons];
+    // initialize players with weights
+    players = [king, hand, ...commons].map(n => ({ name: n, baseWeight: 4, effectiveWeight: 4, skipped: false }));
+    renderWeightsPanel();
 
     setup.classList.add('hidden');
     play.classList.remove('hidden');
@@ -134,6 +137,13 @@
 
   function updateChanceDisplay(){ chanceDisplay.textContent = Math.round(chance*100) + '%'; }
 
+  // show 'debug' label for probability, keep percentage in title for hover
+  function updateChanceDisplayDebug(){
+    if(!chanceDisplay) return;
+    chanceDisplay.textContent = 'debug';
+    chanceDisplay.title = Math.round(chance*100) + '%';
+  }
+
   function logRoll(rolledPct, thresholdPct, success){
     if(!rollLog) return;
     const d = document.createElement('div');
@@ -162,9 +172,17 @@
   }
 
   function pickPerson(){
-    if(players.length === 0) return 'No One';
-    const idx = Math.floor(Math.random() * players.length);
-    return players[idx];
+    if(players.length === 0) return null;
+    // build list of eligible entries by effectiveWeight (>0)
+    const entries = players.filter(p => (p.effectiveWeight || 0) > 0);
+    if(entries.length === 0) return null;
+    const total = entries.reduce((s,p) => s + (p.effectiveWeight||0), 0);
+    let r = Math.random() * total;
+    for(const p of entries){
+      r -= p.effectiveWeight;
+      if(r <= 0) return p;
+    }
+    return entries[entries.length-1];
   }
 
   function renderRaven(){
@@ -191,7 +209,39 @@
     stopTimer();
     chance = 0; updateChanceDisplay();
     renderRaven();
-    const chosen = pickPerson();
+    const chosenObj = pickPerson();
+    const chosen = chosenObj ? chosenObj.name : 'No One';
+    // update weights according to rules:
+    // - when someone is chosen, decrement their baseWeight by 1 (min 0)
+    // - they are set to effectiveWeight 0 (skipped) so they cannot be chosen next immediate round
+    // - any other player who was skipped becomes eligible again with effectiveWeight = baseWeight
+    if(chosenObj){
+      // first, any previously skipped (except the newly chosen) become unskipped
+      players.forEach(p => {
+        if(p.skipped && p !== chosenObj){
+          p.skipped = false;
+          p.effectiveWeight = p.baseWeight;
+        }
+      });
+      // now apply chosen changes
+      chosenObj.baseWeight = Math.max(0, (chosenObj.baseWeight || 0) - 1);
+      chosenObj.effectiveWeight = 0;
+      chosenObj.skipped = true;
+
+      // global rule: if nobody has baseWeight === 4, increment everyone's baseWeight by 1 (cap at 4)
+      const anyFull = players.some(p => p.baseWeight === 4);
+      if(!anyFull){
+        players.forEach(p => {
+          p.baseWeight = Math.min(4, (p.baseWeight || 0) + 1);
+          // do NOT change effectiveWeight if currently skipped (0)
+          if(!p.skipped) p.effectiveWeight = p.baseWeight;
+        });
+      }
+    }
+
+    // update the debug weights panel so the UI reflects new values
+    renderWeightsPanel();
+
     // prepare letter text
     letterContent.textContent = `Hear ye! By raven's beak and royal decree, ${chosen} is called to action: "Rise and answer the clarion of duty!"`;
     // show letter modal on first click of raven
@@ -232,8 +282,37 @@
   callRavenBtn.addEventListener('click', ()=>{ callRaven('manual'); });
   // Reset button now logs a simple message
   if(btnReset){
-    btnReset.addEventListener('click', ()=>{ chance = 0; updateChanceDisplay();
+    btnReset.addEventListener('click', ()=>{ chance = 0; updateChanceDisplayDebug();
       if(rollLog){ const m = document.createElement('div'); m.className='roll-entry'; m.textContent='Chance reset'; rollLog.prepend(m); }
+      renderWeightsPanel();
+    });
+  }
+
+  // weights panel UI (inserted under reset button)
+  let weightsPanel = null;
+  function createWeightsPanel(){
+    if(!btnReset) return;
+    weightsPanel = document.createElement('div');
+    weightsPanel.className = 'weights-panel';
+    btnReset.insertAdjacentElement('afterend', weightsPanel);
+  }
+
+  function renderWeightsPanel(){
+    if(!weightsPanel) return;
+    weightsPanel.innerHTML = '';
+    const title = document.createElement('div');
+    title.className = 'weights-title';
+    title.textContent = 'Players & Weights';
+    weightsPanel.appendChild(title);
+    if(!players || players.length === 0){
+      const none = document.createElement('div'); none.textContent = 'No players'; weightsPanel.appendChild(none); return;
+    }
+    players.forEach(p => {
+      const row = document.createElement('div');
+      row.className = 'weights-row';
+      const skipped = p.skipped ? ' (skipped)' : '';
+      row.textContent = `${p.name} — base: ${p.baseWeight} — effective: ${p.effectiveWeight}${skipped}`;
+      weightsPanel.appendChild(row);
     });
   }
 
@@ -243,6 +322,7 @@
 
   // initial setup
   ensureInitialCommoners();
+  createWeightsPanel();
 
   // expose a small helper for manual opening from URL if desired
   window.__raven_start = ()=>{ intro.classList.add('hidden'); setup.classList.remove('hidden'); ensureInitialCommoners(); };
