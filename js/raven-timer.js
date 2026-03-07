@@ -32,6 +32,9 @@
   let inEvent = false;
   let _modalScrollHandler = null;
   let _modalResizeHandler = null;
+  // hand-change (purple raven) hourly timer/state
+  let handChangeIntervalId = null;
+  let handChangeMode = false;
   const STORAGE_KEYS = {
     NAMES: 'raven_names_v1',
     GAME: 'raven_game_v1'
@@ -243,6 +246,54 @@
     countdown.textContent = '—';
   }
 
+  // --- Purple raven: hourly hand-change event ---
+  function renderPurpleRaven(){
+    ravenContainer.innerHTML = '';
+    const raven = document.createElement('div');
+    raven.className = 'raven purple-raven';
+    raven.innerHTML = `
+      <svg viewBox="0 0 64 64" width="140" height="140" aria-hidden="true">
+        <g fill="purple">
+          <path d="M12 36c4-8 18-12 28-10 0 0-6 6-4 10 3 6 12 6 14 8 0 0-12 6-26 6-14 0-20-12-12-20z"/>
+          <circle cx="44" cy="20" r="2" fill="#fff" />
+        </g>
+      </svg>
+    `;
+    raven.addEventListener('click', ()=>{
+      openHandChangeLetter();
+    });
+    ravenContainer.appendChild(raven);
+  }
+
+  function startHandChangeTimer(){
+    stopHandChangeTimer();
+    // every hour
+    handChangeIntervalId = setInterval(()=>{ if(!inEvent) triggerPurpleHandChange('auto'); }, 3600000);
+  }
+
+  function stopHandChangeTimer(){ if(handChangeIntervalId){ clearInterval(handChangeIntervalId); handChangeIntervalId = null; } }
+
+  function triggerPurpleHandChange(source='manual'){
+    if(inEvent) return;
+    inEvent = true;
+    handChangeMode = false; // will set when raven clicked
+    // pause normal timers
+    stopTimer();
+    stopHandChangeTimer();
+    // render purple raven only; it must be clicked to show the message
+    renderPurpleRaven();
+  }
+
+  function openHandChangeLetter(){
+    if(!letterModal) return;
+    handChangeMode = true;
+    // simple message only
+    letterContent.textContent = 'A new Hand must be chosen.';
+    // ensure next button enabled
+    if(letterNext) { letterNext.disabled = false; }
+    letterModal.classList.add('open');
+  }
+
   function updateChanceDisplay(){ chanceDisplay.textContent = Math.round(chance*100) + '%'; }
 
   // show 'debug' label for probability, keep percentage in title for hover
@@ -367,6 +418,30 @@
   }
 
   letterNext.addEventListener('click', ()=>{
+    // If this was the purple hand-change event, just dismiss message and resume
+    if(handChangeMode){
+      if(letterModal) {
+        letterModal.classList.remove('open');
+        try {
+          if(_modalScrollHandler) { window.removeEventListener('scroll', _modalScrollHandler); _modalScrollHandler = null; }
+          if(_modalResizeHandler) { window.removeEventListener('resize', _modalResizeHandler); _modalResizeHandler = null; }
+        } catch (e) {}
+        letterModal.style.position = '';
+        letterModal.style.top = '';
+        letterModal.style.left = '';
+        letterModal.style.width = '';
+        letterModal.style.height = '';
+      }
+      clearRaven();
+      handChangeMode = false;
+      inEvent = false;
+      // resume normal timers
+      startHandChangeTimer();
+      startTimer();
+      saveGameState();
+      return;
+    }
+
     // on first press, close letter and send raven away
     if(letterModal) {
       letterModal.classList.remove('open');
@@ -401,6 +476,23 @@
       saveGameState();
     });
   }
+
+  // Debug: trigger hand change (purple raven)
+  (function createTriggerHandChangeButton(){
+    try{
+      if(!btnReset) return;
+      if(document.getElementById('btn-trigger-hand-change')) return;
+      const b = document.createElement('button');
+      b.id = 'btn-trigger-hand-change';
+      b.type = 'button';
+      b.textContent = 'trigger hand change';
+      b.style.marginLeft = '8px';
+      b.style.padding = '8px 10px';
+      b.style.cursor = 'pointer';
+      btnReset.insertAdjacentElement('afterend', b);
+      b.addEventListener('click', ()=>{ triggerPurpleHandChange('debug'); });
+    }catch(e){}
+  })();
 
   // weights panel UI (inserted under reset button)
   let weightsPanel = null;
@@ -441,6 +533,9 @@
   loadNames();
   // then restore any running game
   loadGameState();
+
+  // start hourly hand-change timer
+  startHandChangeTimer();
 
   // create a dedicated "Reset Game" button (preserve saved names) placed after the "Change List Names" control
   (function createResetGameButton(){
