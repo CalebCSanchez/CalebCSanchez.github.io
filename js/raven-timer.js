@@ -28,6 +28,7 @@
   let audioCtx = null;
   const audioBuffers = {}; // name -> AudioBuffer
   const loopSources = {};  // name -> { source, gain }
+  const playingSources = {}; // name -> { source, gain } for one-shot WebAudio playback that may need early stopping
   const fallbackAudio = {}; // name -> HTMLAudio element
   let soundEnabled = true; // user can toggle site audio
 
@@ -73,8 +74,12 @@
           // store reference so we can stop it
           loopSources[name] = { source: src, gain };
         } else {
-          // one-shot: automatically stop when ended
-          src.onended = ()=>{ try{ src.disconnect(); gain.disconnect(); }catch(e){} };
+          // store reference for one-shot so it can be stopped early if needed
+          playingSources[name] = { source: src, gain };
+          src.onended = ()=>{
+            try{ src.disconnect(); gain.disconnect(); }catch(e){}
+            try{ playingSources[name] = null; }catch(e){}
+          };
         }
       }catch(e){ /* fallthrough to fallback */ }
       return;
@@ -90,6 +95,12 @@
     if(loopSources[name] && loopSources[name].source){
       try{ loopSources[name].source.stop(0); loopSources[name].source.disconnect(); loopSources[name].gain.disconnect(); }catch(e){}
       loopSources[name] = null;
+      return;
+    }
+    // stop one-shot WebAudio sources if present (e.g., newHand played via WebAudio)
+    if(playingSources[name] && playingSources[name].source){
+      try{ playingSources[name].source.stop(0); playingSources[name].source.disconnect(); playingSources[name].gain.disconnect(); }catch(e){}
+      playingSources[name] = null;
       return;
     }
     // fallback: HTMLAudio element
