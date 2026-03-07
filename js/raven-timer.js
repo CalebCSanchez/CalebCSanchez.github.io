@@ -23,23 +23,94 @@
   const rollLog = document.getElementById('roll-log');
   const btnReset = document.getElementById('btn-reset');
 
-  // Audio assets
-  let audioNewHand = null; // newHand.mp3 (play once when purple raven appears)
-  let audioBlack = null;   // raven.mp3 (loop while black raven visible)
-  let audioScroll = null;  // ScrollOpen.mp3 (play once when modal opens)
+  // Audio assets: prefer Web Audio API (attempt mixing), fall back to HTMLAudio
+  const _AudioContext = window.AudioContext || window.webkitAudioContext || null;
+  let audioCtx = null;
+  const audioBuffers = {}; // name -> AudioBuffer
+  const loopSources = {};  // name -> { source, gain }
+  const fallbackAudio = {}; // name -> HTMLAudio element
+  let soundEnabled = true; // user can toggle site audio
 
-  try{
-    audioNewHand = new Audio('newHand.mp3'); audioNewHand.loop = false;
-  }catch(e){ audioNewHand = null; }
-  try{
-    audioBlack = new Audio('raven.mp3'); audioBlack.loop = true;
-  }catch(e){ audioBlack = null; }
-  try{
-    audioScroll = new Audio('ScrollOpen.mp3'); audioScroll.loop = false;
-  }catch(e){ audioScroll = null; }
+  // preload fallback HTMLAudio elements (used if WebAudio unavailable)
+  try{ fallbackAudio.newHand = new Audio('newHand.mp3'); fallbackAudio.newHand.loop = false; }catch(e){ fallbackAudio.newHand = null; }
+  try{ fallbackAudio.raven = new Audio('raven.mp3'); fallbackAudio.raven.loop = true; }catch(e){ fallbackAudio.raven = null; }
+  try{ fallbackAudio.scroll = new Audio('ScrollOpen.mp3'); fallbackAudio.scroll.loop = false; }catch(e){ fallbackAudio.scroll = null; }
 
-  function _playAudio(a){ if(!a) return; try{ const p = a.play(); if(p && p.catch) p.catch(()=>{}); }catch(e){} }
-  function _stopAudio(a){ if(!a) return; try{ a.pause(); a.currentTime = 0; }catch(e){} }
+  // initialize AudioContext and fetch buffers (called lazily when needed)
+  async function _ensureAudioContext(){
+    if(!soundEnabled) return;
+    if(!_AudioContext) return;
+    if(!audioCtx) {
+      try{
+        audioCtx = new _AudioContext();
+      }catch(e){ audioCtx = null; }
+    }
+    if(!audioCtx) return;
+    const toLoad = [ ['newHand','newHand.mp3'], ['raven','raven.mp3'], ['scroll','ScrollOpen.mp3'] ];
+    await Promise.all(toLoad.map(async ([name,url])=>{
+      if(audioBuffers[name]) return;
+      try{
+        const resp = await fetch(url);
+        const arr = await resp.arrayBuffer();
+        audioBuffers[name] = await audioCtx.decodeAudioData(arr.slice(0));
+      }catch(e){ audioBuffers[name] = null; }
+    }));
+  }
+
+  function _playNamed(name, opts){
+    if(!soundEnabled) return;
+    // prefer WebAudio when available and buffers loaded
+    if(audioCtx && audioBuffers[name]){
+      try{
+        const src = audioCtx.createBufferSource();
+        src.buffer = audioBuffers[name];
+        const gain = audioCtx.createGain();
+        src.connect(gain);
+        gain.connect(audioCtx.destination);
+        if(opts && opts.loop) src.loop = true;
+        src.start(0);
+        if(opts && opts.loop){
+          // store reference so we can stop it
+          loopSources[name] = { source: src, gain };
+        } else {
+          // one-shot: automatically stop when ended
+          src.onended = ()=>{ try{ src.disconnect(); gain.disconnect(); }catch(e){} };
+        }
+      }catch(e){ /* fallthrough to fallback */ }
+      return;
+    }
+    // fallback: HTMLAudio element
+    const el = fallbackAudio[name];
+    if(!el) return;
+    try{ const p = el.play(); if(p && p.catch) p.catch(()=>{}); }catch(e){}
+  }
+
+  function _stopNamed(name){
+    // stop looped WebAudio source if present
+    if(loopSources[name] && loopSources[name].source){
+      try{ loopSources[name].source.stop(0); loopSources[name].source.disconnect(); loopSources[name].gain.disconnect(); }catch(e){}
+      loopSources[name] = null;
+      return;
+    }
+    // fallback: HTMLAudio element
+    const el = fallbackAudio[name];
+    if(!el) return;
+    try{ el.pause(); el.currentTime = 0; }catch(e){}
+  }
+
+  // public wrapper used in code below: ensures audio context started then plays
+  function _playAudioNamed(name, opts){
+    if(!soundEnabled) return;
+    // try to initialize audio context and buffers (but don't block UI)
+    if(_AudioContext && !audioCtx){ _ensureAudioContext().catch(()=>{}); }
+    // if context is suspended (requires user gesture), attempt resume on next gesture; best-effort
+    if(audioCtx && audioCtx.state === 'suspended'){
+      try{ audioCtx.resume().catch(()=>{}); }catch(e){}
+    }
+    _playNamed(name, opts);
+  }
+
+  function _stopAudioNamed(name){ _stopNamed(name); }
 
   let intervalId = null;
   let tickSeconds = 0;
@@ -291,8 +362,8 @@
     });
     ravenContainer.appendChild(raven);
     // play newHand once for purple raven appearance
-    _stopAudio(audioBlack);
-    _playAudio(audioNewHand);
+    _stopAudioNamed('raven');
+    _playAudioNamed('newHand');
   }
 
   function startHandChangeTimer(){
@@ -322,8 +393,8 @@
     // ensure next button enabled
     if(letterNext) { letterNext.disabled = false; }
     // stop any playing new-hand audio and play scroll once
-    _stopAudio(audioNewHand);
-    _playAudio(audioScroll);
+    _stopAudioNamed('newHand');
+    _playAudioNamed('scroll');
     letterModal.classList.add('open');
   }
 
@@ -393,8 +464,8 @@
     raven.addEventListener('click', ()=>openLetter());
     ravenContainer.appendChild(raven);
     // start black raven loop audio
-    _stopAudio(audioNewHand);
-    _playAudio(audioBlack);
+    _stopAudioNamed('newHand');
+    _playAudioNamed('raven',{loop:true});
   }
 
   function clearRaven(){ ravenContainer.innerHTML = ''; }
@@ -450,8 +521,8 @@
     // show modal and make overlay follow scroll
     if(!letterModal) return;
     // stop black raven audio immediately and play scroll once
-    _stopAudio(audioBlack);
-    _playAudio(audioScroll);
+    _stopAudioNamed('raven');
+    _playAudioNamed('scroll');
     // simply open modal; CSS `position:fixed` keeps it covering the viewport
     letterModal.classList.add('open');
   }
@@ -597,6 +668,26 @@
       btn.style.boxShadow = '0 1px 0 rgba(0,0,0,0.2)';
       // insert after editNames
       editNames.insertAdjacentElement('afterend', btn);
+
+      // small site-audio toggle
+      const audioToggleWrap = document.createElement('label');
+      audioToggleWrap.style.marginLeft = '8px';
+      audioToggleWrap.style.cursor = 'pointer';
+      audioToggleWrap.title = 'Toggle site audio (attempt mixing via WebAudio)';
+      const chk = document.createElement('input');
+      chk.type = 'checkbox'; chk.checked = true; chk.style.marginRight = '6px';
+      audioToggleWrap.appendChild(chk);
+      const txt = document.createTextNode('Site audio');
+      audioToggleWrap.appendChild(txt);
+      btn.insertAdjacentElement('afterend', audioToggleWrap);
+      chk.addEventListener('change', (e)=>{
+        soundEnabled = !!chk.checked;
+        if(soundEnabled && _AudioContext){ _ensureAudioContext().catch(()=>{}); }
+        if(!soundEnabled){
+          // stop any playing sounds
+          _stopAudioNamed('raven'); _stopAudioNamed('newHand'); _stopAudioNamed('scroll');
+        }
+      });
 
       btn.addEventListener('click', (e)=>{
         // confirmation to make accidental clicks harder
