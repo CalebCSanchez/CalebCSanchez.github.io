@@ -32,6 +32,10 @@
   let inEvent = false;
   let _modalScrollHandler = null;
   let _modalResizeHandler = null;
+  const STORAGE_KEYS = {
+    NAMES: 'raven_names_v1',
+    GAME: 'raven_game_v1'
+  };
 
   // Ensure at least 2 commoners so total >=4 (King+Hand+2 commoners)
   function ensureInitialCommoners(){
@@ -49,6 +53,8 @@
     input.name = `commoner-${idx}`;
     input.placeholder = `Name`;
     input.value = name;
+    // autosave names when edited
+    input.addEventListener('input', ()=>{ saveNames(); });
     row.appendChild(label);
     row.appendChild(input);
     commonersEl.appendChild(row);
@@ -58,10 +64,17 @@
     // do not allow fewer than 2 commoners
     if(commonersEl.children.length <= 2) return;
     commonersEl.removeChild(commonersEl.lastChild);
+    saveNames();
   }
 
   addCommoner.addEventListener('click', ()=>{ addCommonerRow(); scrollToBottomIfNeeded(); });
   removeCommoner.addEventListener('click', ()=>{ removeCommonerRow(); scrollToBottomIfNeeded(); });
+
+  // save name edits for king/hand
+  const kingInput = document.querySelector('input[name=king]');
+  const handInput = document.querySelector('input[name=hand]');
+  if(kingInput) kingInput.addEventListener('input', ()=>{ saveNames(); });
+  if(handInput) handInput.addEventListener('input', ()=>{ saveNames(); });
 
   function scrollToBottomIfNeeded(){
     window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});
@@ -91,6 +104,10 @@
     players = [king, hand, ...commons].map(n => ({ name: n, baseWeight: 4, effectiveWeight: 4, skipped: false }));
     renderWeightsPanel();
 
+    // persist names and initial game state
+    saveNames({ king, hand, commons });
+    saveGameState();
+
     setup.classList.add('hidden');
     play.classList.remove('hidden');
 
@@ -107,6 +124,97 @@
       return `${m}m ${s}s`;
     }
     return `${seconds}s`;
+  }
+
+  // ----- Persistence helpers -----
+  function saveNames(obj){
+    // obj optional; if not provided, read from DOM
+    try{
+      let payload = obj;
+      if(!payload){
+        const king = (document.querySelector('input[name=king]') && document.querySelector('input[name=king]').value.trim()) || '';
+        const hand = (document.querySelector('input[name=hand]') && document.querySelector('input[name=hand]').value.trim()) || '';
+        const commonerInputs = Array.from(commonersEl.querySelectorAll('input'));
+        const commons = commonerInputs.map(i => i.value.trim() || '');
+        payload = { king, hand, commons };
+      }
+      localStorage.setItem(STORAGE_KEYS.NAMES, JSON.stringify(payload));
+    }catch(e){}
+  }
+
+  function loadNames(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEYS.NAMES);
+      if(!raw) return;
+      const data = JSON.parse(raw);
+      if(!data) return;
+      // set king/hand
+      const kingEl = document.querySelector('input[name=king]');
+      const handEl = document.querySelector('input[name=hand]');
+      if(kingEl && data.king) kingEl.value = data.king;
+      if(handEl && data.hand) handEl.value = data.hand;
+      // set commoners: ensure enough rows
+      const commons = Array.isArray(data.commons) ? data.commons : [];
+      // remove all existing commoner rows then recreate to match saved
+      commonersEl.innerHTML = '';
+      commons.forEach(c => addCommonerRow(c || ''));
+      // ensure minimum count
+      ensureInitialCommoners();
+    }catch(e){}
+  }
+
+  function saveGameState(){
+    try{
+      const state = {
+        players: players || [],
+        chance: chance || 0,
+        tickSeconds: tickSeconds || 0,
+        timerOn: timerToggle ? timerToggle.checked : true,
+        intervalMin: intervalMin ? intervalMin.value : '0',
+        intervalSec: intervalSec ? intervalSec.value : '0',
+        inEvent: !!inEvent,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(STORAGE_KEYS.GAME, JSON.stringify(state));
+    }catch(e){}
+  }
+
+  function loadGameState(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEYS.GAME);
+      if(!raw) return;
+      const s = JSON.parse(raw);
+      if(!s) return;
+      // restore players (ensure proper fields exist)
+      players = (s.players || []).map(p => ({
+        name: p.name || 'Unknown',
+        baseWeight: typeof p.baseWeight === 'number' ? p.baseWeight : 4,
+        effectiveWeight: typeof p.effectiveWeight === 'number' ? p.effectiveWeight : (p.baseWeight || 4),
+        skipped: !!p.skipped
+      }));
+      chance = typeof s.chance === 'number' ? s.chance : 0.5;
+      tickSeconds = typeof s.tickSeconds === 'number' ? s.tickSeconds : 0;
+      if(intervalMin && typeof s.intervalMin !== 'undefined') intervalMin.value = s.intervalMin;
+      if(intervalSec && typeof s.intervalSec !== 'undefined') intervalSec.value = s.intervalSec;
+      if(timerToggle) timerToggle.checked = !!s.timerOn;
+
+      // if there are players, go to play screen
+      if(players && players.length){
+        intro.classList.add('hidden');
+        setup.classList.add('hidden');
+        play.classList.remove('hidden');
+        renderWeightsPanel();
+        updateChanceDisplay();
+        // if we were in an event, render raven and stop timer
+        inEvent = !!s.inEvent;
+        if(inEvent){ renderRaven(); stopTimer(); }
+        else { startTimer(); }
+      }
+    }catch(e){}
+  }
+
+  function clearSavedGame(){
+    try{ localStorage.removeItem(STORAGE_KEYS.GAME); }catch(e){}
   }
 
   function startTimer(){
@@ -168,6 +276,7 @@
     } else {
       chance = Math.min(1, chance + 0.1);
       updateChanceDisplay();
+      saveGameState();
     }
   }
 
@@ -241,6 +350,8 @@
 
     // update the debug weights panel so the UI reflects new values
     renderWeightsPanel();
+    // persist updated game state
+    saveGameState();
 
     // prepare letter text
     letterContent.textContent = `Hear ye! By raven's beak and royal decree, ${chosen} is called to action: "Rise and answer the clarion of duty!"`;
@@ -277,14 +388,17 @@
     chance = 0;
     updateChanceDisplay();
     startTimer();
+    saveGameState();
   });
 
   callRavenBtn.addEventListener('click', ()=>{ callRaven('manual'); });
-  // Reset button now logs a simple message
+  // Restore original Reset Chance behavior on existing reset button
   if(btnReset){
-    btnReset.addEventListener('click', ()=>{ chance = 0; updateChanceDisplayDebug();
+    btnReset.addEventListener('click', ()=>{
+      chance = 0; updateChanceDisplayDebug();
       if(rollLog){ const m = document.createElement('div'); m.className='roll-entry'; m.textContent='Chance reset'; rollLog.prepend(m); }
       renderWeightsPanel();
+      saveGameState();
     });
   }
 
@@ -323,6 +437,56 @@
   // initial setup
   ensureInitialCommoners();
   createWeightsPanel();
+  // load persisted names first so inputs reflect saved list
+  loadNames();
+  // then restore any running game
+  loadGameState();
+
+  // create a dedicated "Reset Game" button (preserve saved names) placed after the "Change List Names" control
+  (function createResetGameButton(){
+    try{
+      if(!editNames) return;
+      // avoid duplicating if already created
+      if(document.getElementById('btn-reset-game')) return;
+      const btn = document.createElement('button');
+      btn.id = 'btn-reset-game';
+      btn.type = 'button';
+      btn.textContent = 'Reset Game';
+      // styling: reddish and noticeable (inline as quick solution)
+      btn.style.background = '#c0392b';
+      btn.style.color = '#fff';
+      btn.style.border = 'none';
+      btn.style.padding = '10px 14px';
+      btn.style.marginLeft = '8px';
+      btn.style.borderRadius = '4px';
+      btn.style.cursor = 'pointer';
+      btn.style.boxShadow = '0 1px 0 rgba(0,0,0,0.2)';
+      // insert after editNames
+      editNames.insertAdjacentElement('afterend', btn);
+
+      btn.addEventListener('click', (e)=>{
+        // confirmation to make accidental clicks harder
+        const ok = window.confirm('Are you sure you want to reset the current game? This will return to the start screen but will keep the saved names.');
+        if(!ok) return;
+        // perform reset (preserve saved names)
+        stopTimer();
+        inEvent = false;
+        players = [];
+        chance = 0.5;
+        tickSeconds = 0;
+        renderWeightsPanel();
+        updateChanceDisplay();
+        clearSavedGame();
+        intro.classList.remove('hidden');
+        setup.classList.add('hidden');
+        play.classList.add('hidden');
+      });
+    }catch(e){}
+  })();
+
+  // autosave on page hide/unload
+  window.addEventListener('pagehide', ()=>{ saveNames(); saveGameState(); });
+  window.addEventListener('beforeunload', ()=>{ saveNames(); saveGameState(); });
 
   // expose a small helper for manual opening from URL if desired
   window.__raven_start = ()=>{ intro.classList.add('hidden'); setup.classList.remove('hidden'); ensureInitialCommoners(); };
