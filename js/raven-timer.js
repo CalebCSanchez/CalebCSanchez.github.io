@@ -58,6 +58,15 @@
     GAME: 'raven_game_v1'
   };
 
+  // helper to render letter text with an embellished initial
+  function setLetterText(txt){
+    if(!letterContent) return;
+    const safe = String(txt || '');
+    const first = safe.charAt(0) || '';
+    const rest = safe.slice(1);
+    letterContent.innerHTML = `<p><span class="initial">${first}</span>${rest}</p>`;
+  }
+
   // Ensure at least 2 commoners so total >=4 (King+Hand+2 commoners)
   function ensureInitialCommoners(){
     const needed = 2 - commonersEl.children.length;
@@ -309,7 +318,7 @@
     if(!letterModal) return;
     handChangeMode = true;
     // simple message only
-    letterContent.textContent = 'A new Hand must be chosen.';
+    setLetterText('A new Hand must be chosen.');
     // ensure next button enabled
     if(letterNext) { letterNext.disabled = false; }
     // stop any playing new-hand audio and play scroll once
@@ -432,7 +441,7 @@
     saveGameState();
 
     // prepare letter text
-    letterContent.textContent = `Hear ye! By raven's beak and royal decree, ${chosen} is called to action: "Rise and answer the clarion of duty!"`;
+    setLetterText(`Hear ye! By raven's beak and royal decree, ${chosen} is called to action: "Rise and answer the clarion of duty!"`);
     // show letter modal on first click of raven
     // we will wait for user to click raven which opens letter via click handler attached earlier
   }

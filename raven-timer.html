@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Raven Timer</title>
   <link rel="stylesheet" href="css/raven-timer.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <main class="app">
@@ -72,7 +73,11 @@
 
     <div id="letter-modal" class="modal" role="dialog" aria-modal="true">
       <div class="modal-card">
-        <div id="letter-content" class="letter"></div>
+        <div class="scroll-wrap">
+          <div class="scroll-rod scroll-rod-top" aria-hidden="true"></div>
+          <div class="scroll-paper" id="letter-content" role="document"></div>
+          <div class="scroll-rod scroll-rod-bottom" aria-hidden="true"></div>
+        </div>
         <div class="modal-actions">
           <button id="letter-next" class="btn primary">Continue</button>
         </div>
