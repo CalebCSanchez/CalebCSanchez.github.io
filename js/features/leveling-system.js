@@ -35,7 +35,7 @@ class LevelingSystem {
         this.restartButton = document.getElementById('restart-progress');
         
         // Interactive mode state
-        this.interactiveMode = this.getCookie('interactiveMode') !== 'false'; // Default to true
+        this.interactiveMode = this.getCookie('interactiveMode') === 'true'; // Default to false for new users
         
         // Initialize display with saved values
         this.updateLevelDisplay();

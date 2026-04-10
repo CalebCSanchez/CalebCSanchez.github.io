@@ -206,11 +206,11 @@ class PDFGenerator {
             yPosition += 5;
             
             const aipsoAchievements = [
-                '• Enhanced proprietary C# WinForms underwriting application serving multiple state insurance plans',
-                '• Modernized legacy VB/.NET modules into maintainable C# classes, documenting patterns for future web migration',
-                '• Resolved 90+ defects and story tickets since onboarding, improving application stability and reducing support escalations',
-                '• Optimized SQL queries, stored procedures, and data-repair scripts ensuring data integrity across rating tables',
-                '• Delivered features in 4-week Agile sprints using Azure DevOps, conducting code reviews and mentoring junior developers'
+                '• Led AI tooling adoption with GitHub Copilot and custom team instructions, improving code generation accuracy and delivery velocity',
+                '• Engineered debug workflow optimizations that cut local load time from 1m 42s to under 1s, reclaiming developer hours',
+                '• Standardized PR/Scrum processes and advised on Git, CoPilot, and Visual Studio best practices',
+                '• Modernized legacy VB/early-.NET modules into maintainable C#/.NET 8 classes while documenting future Blazor migration patterns',
+                '• Created an AI ticket automation tool and presented findings to executive stakeholders to reduce administrative overhead'
             ];
             
             doc.setFont('helvetica', 'normal');
@@ -408,11 +408,11 @@ class PDFGenerator {
             <h3>Software Engineer II <span class="date">November 2024 - Present</span></h3>
             <div class="company">AIPSO, Remote</div>
             <ul>
-                <li>Enhanced proprietary C# WinForms underwriting application serving multiple state insurance plans</li>
-                <li>Modernized legacy VB/.NET modules into maintainable C# classes, documenting patterns for future web migration</li>
-                <li>Resolved 90+ defects and story tickets since onboarding, improving application stability and reducing support escalations</li>
-                <li>Optimized SQL queries, stored procedures, and data-repair scripts ensuring data integrity across rating tables</li>
-                <li>Delivered features in 4-week Agile sprints using Azure DevOps, conducting code reviews and mentoring junior developers</li>
+                <li>Led AI tooling adoption with GitHub Copilot and custom team instructions, improving code generation accuracy and delivery velocity</li>
+                <li>Engineered debug workflow optimizations that cut local load time from 1m 42s to under 1s, reclaiming developer hours</li>
+                <li>Standardized PR/Scrum processes and advised on Git, CoPilot, and Visual Studio best practices</li>
+                <li>Modernized legacy VB/early-.NET modules into maintainable C#/.NET 8 classes while documenting future Blazor migration patterns</li>
+                <li>Created an AI ticket automation tool and presented findings to executive stakeholders to reduce administrative overhead</li>
             </ul>
         </div>
 
