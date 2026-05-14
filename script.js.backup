@@ -897,7 +897,7 @@ class Portfolio {
             doc.text('PROFESSIONAL SUMMARY', margin, yPosition);
             yPosition += 10;
             
-            const summary = 'Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 90+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.';
+            const summary = 'Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 300+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.';
             yPosition = addText(summary, margin, yPosition, { fontSize: 9 }) + 6;
 
             // Technical Skills section
@@ -957,7 +957,7 @@ class Portfolio {
             const aipsoAchievements = [
                 '• Enhanced proprietary C# WinForms underwriting application serving multiple state insurance plans',
                 '• Modernized legacy VB/.NET modules into maintainable C# classes, documenting patterns for future web migration',
-                '• Resolved 90+ defects and story tickets since onboarding, improving application stability and reducing support escalations',
+                '• Resolved 300+ defects and story tickets since onboarding, improving application stability and reducing support escalations',
                 '• Optimized SQL queries, stored procedures, and data-repair scripts ensuring data integrity across rating tables',
                 '• Delivered features in 4-week Agile sprints using Azure DevOps, conducting code reviews and mentoring junior developers'
             ];
@@ -1000,7 +1000,7 @@ class Portfolio {
             // Contract work - Platos Closet
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(11);
-            doc.text('Contract Software Developer', margin, yPosition);
+            doc.text('Contract Software & Cloud Engineer', margin, yPosition);
             doc.setFont('helvetica', 'normal');
             doc.setFontSize(9);
             doc.text('March 2025 - August 2025', pageWidth - margin - 45, yPosition);
@@ -1179,7 +1179,7 @@ class Portfolio {
 
     <div class="section">
         <h2>PROFESSIONAL SUMMARY</h2>
-        <p>Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 90+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.</p>
+        <p>Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 300+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.</p>
     </div>
 
     <div class="section">
@@ -1203,7 +1203,7 @@ class Portfolio {
             <ul>
                 <li>Enhanced proprietary C# WinForms underwriting application serving multiple state insurance plans</li>
                 <li>Modernized legacy VB/.NET modules into maintainable C# classes, documenting patterns for future web migration</li>
-                <li>Resolved 90+ defects and story tickets since onboarding, improving application stability and reducing support escalations</li>
+                <li>Resolved 300+ defects and story tickets since onboarding, improving application stability and reducing support escalations</li>
                 <li>Optimized SQL queries, stored procedures, and data-repair scripts ensuring data integrity across rating tables</li>
                 <li>Delivered features in 4-week Agile sprints using Azure DevOps, conducting code reviews and mentoring junior developers</li>
             </ul>
@@ -1221,7 +1221,7 @@ class Portfolio {
         </div>
 
         <div class="job">
-            <h3>Contract Software Developer <span class="date">March 2025 - August 2025</span></h3>
+            <h3>Contract Software & Cloud Engineer <span class="date">March 2025 - August 2025</span></h3>
             <div class="company">Plato's Closet, Remote</div>
             <ul>
                 <li>Modernized legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server</li>

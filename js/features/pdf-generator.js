@@ -148,7 +148,7 @@ class PDFGenerator {
             doc.text('PROFESSIONAL SUMMARY', margin, yPosition);
             yPosition += 10;
             
-            const summary = 'Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 90+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.';
+            const summary = 'Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 300+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.';
             yPosition = addText(summary, margin, yPosition, { fontSize: 9 }) + 6;
 
             // Technical Skills section
@@ -220,6 +220,34 @@ class PDFGenerator {
             });
             yPosition += 5;
 
+            // Contract work - Platos Closet
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(11);
+            doc.text('Contract Software & Cloud Engineer', margin, yPosition);
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.text('March 2025 - August 2025', pageWidth - margin - 45, yPosition);
+            yPosition += 4;
+            
+            doc.setFont('helvetica', 'italic');
+            doc.setFontSize(9);
+            doc.text('Plato\'s Closet, Remote', margin, yPosition);
+            yPosition += 4;
+            
+            const contractAchievements = [
+                '• Deployed on AWS EC2 for scalable retail operations, modernizing legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server',
+                '• Implemented serverless Lambda functions for real-time processing, resolving critical variance calculation bugs causing incorrect negative variance reporting',
+                '• Delivered fully functional solution within 2 months including comprehensive testing and deployment to AWS cloud infrastructure',
+                '• Built responsive UI with React, Tailwind CSS, and Chart.js for enhanced cash operations user experience'
+            ];
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            contractAchievements.forEach(achievement => {
+                yPosition = addText(achievement, margin, yPosition, { fontSize: 8 }) + 2;
+            });
+            yPosition += 4;
+
             // Previous position
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(11);
@@ -247,34 +275,6 @@ class PDFGenerator {
                 yPosition = addText(achievement, margin, yPosition, { fontSize: 8 }) + 2;
             });
             yPosition += 5;
-
-            // Contract work - Platos Closet
-            doc.setFont('helvetica', 'bold');
-            doc.setFontSize(11);
-            doc.text('Contract Software Developer', margin, yPosition);
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(9);
-            doc.text('March 2025 - August 2025', pageWidth - margin - 45, yPosition);
-            yPosition += 4;
-            
-            doc.setFont('helvetica', 'italic');
-            doc.setFontSize(9);
-            doc.text('Plato\'s Closet, Remote', margin, yPosition);
-            yPosition += 4;
-            
-            const contractAchievements = [
-                '• Deployed on AWS EC2 for scalable retail operations, modernizing legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server',
-                '• Implemented serverless Lambda functions for real-time processing, resolving critical variance calculation bugs causing incorrect negative variance reporting',
-                '• Delivered fully functional solution within 2 months including comprehensive testing and deployment to AWS cloud infrastructure',
-                '• Built responsive UI with React, Tailwind CSS, and Chart.js for enhanced cash operations user experience'
-            ];
-            
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8);
-            contractAchievements.forEach(achievement => {
-                yPosition = addText(achievement, margin, yPosition, { fontSize: 8 }) + 2;
-            });
-            yPosition += 4;
 
             // Menlo (compressed)
             doc.setFont('helvetica', 'bold');
@@ -386,7 +386,7 @@ class PDFGenerator {
 
     <div class="section">
         <h2>PROFESSIONAL SUMMARY</h2>
-        <p>Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 90+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.</p>
+        <p>Experienced Full-Stack Developer specializing in .NET Framework with 5+ years of expertise in backend development, API creation, and performance optimization. Currently serving as Software Engineer II at AIPSO, leading modernization of legacy systems and enhancing proprietary underwriting applications. Proven track record of resolving 300+ defects, delivering 200+ feature tickets, and optimizing enterprise application performance.</p>
     </div>
 
     <div class="section">
@@ -417,6 +417,17 @@ class PDFGenerator {
         </div>
 
         <div class="job">
+            <h3>Contract Software & Cloud Engineer <span class="date">March 2025 - August 2025</span></h3>
+            <div class="company">Plato's Closet, Remote</div>
+            <ul>
+                <li>Deployed on AWS EC2 for scalable retail operations, modernizing legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server</li>
+                <li>Implemented serverless Lambda functions for real-time processing, resolving critical variance calculation bugs causing incorrect negative variance reporting</li>
+                <li>Delivered fully functional solution within 2 months including comprehensive testing and deployment to AWS cloud infrastructure</li>
+                <li>Built responsive UI with React, Tailwind CSS, and Chart.js for enhanced cash operations user experience</li>
+            </ul>
+        </div>
+
+        <div class="job">
             <h3>Lead .NET Full-Stack Developer & Release Manager <span class="date">February 2023 - November 2024</span></h3>
             <div class="company">Finys, Troy, MI</div>
             <ul>
@@ -424,17 +435,6 @@ class PDFGenerator {
                 <li>Orchestrated three production releases, coordinating developers, QA, configuration promotion, and post-release support</li>
                 <li>Delivered 200+ tickets across new features and defects, implementing performance optimizations for improved transaction speeds</li>
                 <li>Trained teammates on new frameworks while strengthening communication and problem-solving skills</li>
-            </ul>
-        </div>
-
-        <div class="job">
-            <h3>Contract Software Developer <span class="date">March 2025 - August 2025</span></h3>
-            <div class="company">Plato's Closet, Remote</div>
-            <ul>
-                <li>Deployed on AWS EC2 for scalable retail operations, modernizing legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server</li>
-                <li>Implemented serverless Lambda functions for real-time processing, resolving critical variance calculation bugs causing incorrect negative variance reporting</li>
-                <li>Delivered fully functional solution within 2 months including comprehensive testing and deployment to AWS cloud infrastructure</li>
-                <li>Built responsive UI with React, Tailwind CSS, and Chart.js for enhanced cash operations user experience</li>
             </ul>
         </div>
 
