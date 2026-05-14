@@ -263,9 +263,9 @@ class PDFGenerator {
             yPosition += 4;
             
             const contractAchievements = [
-                '• Modernized legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server',
-                '• Resolved critical variance calculation bugs causing incorrect negative variance reporting in retail operations',
-                '• Delivered fully functional solution within 2 months including comprehensive testing and deployment',
+                '• Deployed on AWS EC2 for scalable retail operations, modernizing legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server',
+                '• Implemented serverless Lambda functions for real-time processing, resolving critical variance calculation bugs causing incorrect negative variance reporting',
+                '• Delivered fully functional solution within 2 months including comprehensive testing and deployment to AWS cloud infrastructure',
                 '• Built responsive UI with React, Tailwind CSS, and Chart.js for enhanced cash operations user experience'
             ];
             
@@ -431,9 +431,9 @@ class PDFGenerator {
             <h3>Contract Software Developer <span class="date">March 2025 - August 2025</span></h3>
             <div class="company">Plato's Closet, Remote</div>
             <ul>
-                <li>Modernized legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server</li>
-                <li>Resolved critical variance calculation bugs causing incorrect negative variance reporting in retail operations</li>
-                <li>Delivered fully functional solution within 2 months including comprehensive testing and deployment</li>
+                <li>Deployed on AWS EC2 for scalable retail operations, modernizing legacy cash management system using React 18, .NET Framework 4.7.2 Web API, and SQL Server</li>
+                <li>Implemented serverless Lambda functions for real-time processing, resolving critical variance calculation bugs causing incorrect negative variance reporting</li>
+                <li>Delivered fully functional solution within 2 months including comprehensive testing and deployment to AWS cloud infrastructure</li>
                 <li>Built responsive UI with React, Tailwind CSS, and Chart.js for enhanced cash operations user experience</li>
             </ul>
         </div>
