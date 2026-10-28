@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <meta name="description" content="A Halloween bingo host board with round management and an exact-cent prize calculator.">
+  <title>Midnight Bingo | Caleb Sanchez</title>
+  <link rel="stylesheet" href="css/halloween-bingo.css">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Back to Caleb Sanchez portfolio">
+      <span class="brand-mark" aria-hidden="true">☾</span>
+      <span>Midnight <b>Bingo</b></span>
+    </a>
+    <div class="topbar-actions">
+      <span class="event-tag"><span class="status-lamp"></span> HALLOWEEN NIGHT</span>
+      <button class="icon-button" id="fullscreen-button" type="button" title="Toggle fullscreen" aria-label="Toggle fullscreen">⛶</button>
+    </div>
+  </header>
+
+  <main class="dashboard">
+    <section class="game-column" aria-label="Bingo game board">
+      <div class="game-heading">
+        <div>
+          <p class="eyebrow"><span aria-hidden="true">✦</span> THE HAUNTED CALLER</p>
+          <h1>Halloween <span>Bingo</span></h1>
+        </div>
+        <div class="round-navigation" id="round-navigation" aria-label="Choose a round"></div>
+      </div>
+
+      <section class="play-surface" aria-label="Current round">
+        <div class="play-topline">
+          <div class="round-heading">
+            <span class="round-seal" aria-hidden="true">✦</span>
+            <div>
+              <span class="eyebrow" id="round-kicker">ROUND 1</span>
+              <h2 id="round-title-display">Warm-Up</h2>
+            </div>
+          </div>
+          <span class="game-status" id="game-status">READY TO BEGIN</span>
+        </div>
+
+        <div class="caller-row">
+          <div class="current-ball" id="current-ball" aria-live="polite" aria-label="No number drawn yet">
+            <span class="ball-letter" id="ball-letter">?</span>
+            <span class="ball-number" id="ball-number">--</span>
+          </div>
+          <div class="caller-info">
+            <p class="eyebrow">THE LAST CALL</p>
+            <p class="caller-caption" id="caller-caption">The first number is waiting in the fog.</p>
+            <div class="call-actions">
+              <button class="button button-primary" id="draw-button" type="button" disabled><span aria-hidden="true">✦</span> Draw Number</button>
+              <button class="button button-quiet" id="round-state-button" type="button">Start Round</button>
+            </div>
+          </div>
+          <div class="draw-count" aria-live="polite">
+            <span class="draw-count-value" id="draw-count">0</span>
+            <span>called</span>
+            <small><span id="remaining-count">75</span> remain</small>
+          </div>
+        </div>
+
+        <div class="board-wrap">
+          <div class="number-board" id="number-board" role="group" aria-label="Bingo numbers 1 through 75"></div>
+        </div>
+
+        <div class="game-footer">
+          <div class="recent-calls">
+            <div class="footer-label"><span class="spark" aria-hidden="true">✦</span> RECENT CALLS</div>
+            <ol class="history-list" id="history-list" aria-label="Recently drawn numbers"></ol>
+          </div>
+          <div class="board-actions">
+            <button class="text-button" id="reset-round-button" type="button">↺ Reset board</button>
+            <button class="text-button" id="new-game-button" type="button">☾ New game</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="stage-footer">
+        <div class="pattern-display">
+          <div class="pattern-preview" id="active-pattern-preview" role="img" aria-label="Winning pattern preview; the purple center square is the free space"></div>
+          <div><span class="eyebrow">TONIGHT'S SPELL</span><strong id="active-pattern-name">One Line</strong></div>
+        </div>
+        <div class="stage-shortcuts"><kbd>D</kbd> draw <kbd>P</kbd> pause <kbd>F</kbd> fullscreen</div>
+      </div>
+    </section>
+
+    <aside class="spellbook" aria-label="Round settings and prize calculator">
+      <div class="spellbook-heading">
+        <div>
+          <p class="eyebrow">THE HOST'S SPELLBOOK</p>
+          <h2>Round &amp; Prizes</h2>
+        </div>
+        <span class="book-seal" aria-hidden="true">✺</span>
+      </div>
+
+      <details class="global-settings" open>
+        <summary><span>Game settings</span><span class="summary-mark" aria-hidden="true">⌄</span></summary>
+        <div class="settings-fields">
+          <label class="field-label" for="round-count">Rounds in this game</label>
+          <input id="round-count" class="setting-input" type="number" min="1" max="12" step="1" value="4" inputmode="numeric">
+          <label class="field-label" for="card-price">Price per paid card</label>
+          <div class="money-input"><span>$</span><input id="card-price" type="number" min="0" step="0.01" value="0.25" inputmode="decimal" aria-label="Price per paid card in US dollars"><small>USD</small></div>
+          <p class="field-note">Each round's pot uses only paid cards entered for that round.</p>
+        </div>
+      </details>
+
+      <div class="round-tabs" id="round-tabs" role="tablist" aria-label="Game rounds"></div>
+      <section class="round-config" id="round-config" aria-label="Selected round configuration"></section>
+      <div class="spellbook-footnote"><span aria-hidden="true">☽</span> Prizes are split by weight; leftover cents go to the largest fractional shares, ties in listed order.</div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="js/bingo-core.js"></script>
+  <script src="js/halloween-bingo.js"></script>
+</body>
+</html>
