@@ -31,6 +31,13 @@ test('draws never repeat and returns null after all 75 numbers are drawn', () =>
   assert.equal(BingoCore.drawNumber(Array.from({ length: 75 }, (_, index) => index + 1)), null);
 });
 
+test('manual calls append the selected number once and reject invalid or duplicate numbers', () => {
+  assert.deepEqual(BingoCore.addCalledNumber([2, 4], 44), [2, 4, 44]);
+  assert.equal(BingoCore.addCalledNumber([2, 4], 4), null);
+  assert.equal(BingoCore.addCalledNumber([], 0), null);
+  assert.equal(BingoCore.addCalledNumber([], 76), null);
+});
+
 test('round resizing preserves existing rounds and creates defaults', () => {
   const game = BingoCore.createDefaultGame();
   game.rounds[0].paidCards = 25;

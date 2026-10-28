@@ -158,6 +158,13 @@
     return remaining[Math.floor(boundedSample * remaining.length)];
   }
 
+  function addCalledNumber(drawnNumbers, number) {
+    if (!Array.isArray(drawnNumbers) || !Number.isInteger(number) || number < 1 || number > 75 || drawnNumbers.includes(number)) {
+      return null;
+    }
+    return [...drawnNumbers, number];
+  }
+
   function resizeRounds(rounds, count) {
     if (!Number.isSafeInteger(count) || count < 1 || count > 12) {
       throw new RangeError('Round count must be between 1 and 12.');
@@ -167,5 +174,5 @@
     return resized;
   }
 
-  return { calculatePayouts, createDefaultGame, drawNumber, getPatternMask, makeRound, parseMoneyToCents, PATTERN_CATALOG, resizeRounds };
+  return { addCalledNumber, calculatePayouts, createDefaultGame, drawNumber, getPatternMask, makeRound, parseMoneyToCents, PATTERN_CATALOG, resizeRounds };
 });

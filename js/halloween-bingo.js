@@ -89,9 +89,11 @@
       const start = column * 15 + 1;
       const cells = Array.from({ length: 15 }, (_, index) => {
         const number = start + index;
-        const drawn = currentRound().drawn.includes(number);
-        const current = currentRound().drawn.at(-1) === number;
-        return `<div class="number-cell${drawn ? ' is-drawn' : ''}${current ? ' is-current' : ''}" data-number="${number}" aria-label="${letter} ${number}${drawn ? ', drawn' : ''}">${number}</div>`;
+        const round = currentRound();
+        const drawn = round.drawn.includes(number);
+        const current = round.drawn.at(-1) === number;
+        const locked = round.status === 'paused' || round.status === 'complete';
+        return `<button class="number-cell${drawn ? ' is-drawn' : ''}${current ? ' is-current' : ''}" type="button" data-call-number="${number}" aria-label="${letter} ${number}${drawn ? ', called' : ', call number'}" aria-pressed="${drawn}" ${drawn || locked ? 'disabled' : ''}>${number}</button>`;
       }).join('');
       return `<div class="bingo-column" style="--column-color:${COLUMNS[column]}"><div class="column-letter">${letter}</div>${cells}</div>`;
     }).join('');
@@ -232,6 +234,24 @@
     render();
   }
 
+  function animateCall() {
+    saveState();
+    render();
+    elements.ball.classList.remove('has-number');
+    void elements.ball.offsetWidth;
+    elements.ball.classList.add('has-number');
+  }
+
+  function callNumber(number) {
+    const round = currentRound();
+    if (round.status === 'paused' || round.status === 'complete') return;
+    const updatedDraws = BingoCore.addCalledNumber(round.drawn, number);
+    if (!updatedDraws) return;
+    round.drawn = updatedDraws;
+    round.status = 'playing';
+    animateCall();
+  }
+
   function drawNumber() {
     const round = currentRound();
     if (round.status !== 'playing') return;
@@ -240,12 +260,7 @@
       showToast('All 75 numbers have been called.');
       return;
     }
-    round.drawn.push(number);
-    saveState();
-    render();
-    elements.ball.classList.remove('has-number');
-    void elements.ball.offsetWidth;
-    elements.ball.classList.add('has-number');
+    callNumber(number);
   }
 
   function toggleRoundState() {
@@ -394,6 +409,10 @@
   }
 
   elements.drawButton.addEventListener('click', drawNumber);
+  elements.numberBoard.addEventListener('click', event => {
+    const tile = event.target.closest('[data-call-number]');
+    if (tile) callNumber(Number(tile.dataset.callNumber));
+  });
   elements.roundStateButton.addEventListener('click', toggleRoundState);
   elements.resetRoundButton.addEventListener('click', resetRoundBoard);
   elements.newGameButton.addEventListener('click', newGame);
