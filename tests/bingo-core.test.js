@@ -1,6 +1,6 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const BingoCore = require('../js/bingo-core.js');
+const BingoCore = require('../js/halloween/bingo-core.js');
 
 test('payout allocation totals the pot and distributes leftover cents by largest remainder', () => {
   const result = BingoCore.calculatePayouts(25, 25, [

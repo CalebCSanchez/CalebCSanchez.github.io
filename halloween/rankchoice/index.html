@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <title>Costume Contest | Caleb Sanchez</title>
+  <link rel="stylesheet" href="/css/halloween/rankchoice.css">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/halloween/">☾ Costume <b>Contest</b></a>
+    <nav class="topbar-links"><a href="/halloween/rankchoice/settings/">Crypt Keeper</a></nav>
+  </header>
+
+  <main class="shell">
+    <p class="eyebrow">✦ THE GRAND COSTUME CONTEST</p>
+    <h1 class="title">Haunted <span>Ballot Box</span></h1>
+
+    <section class="card center" id="view-loading"><p class="muted flicker">Summoning the ballot box...</p></section>
+
+    <section class="card center" id="view-setup" hidden>
+      <div class="big-emoji">🕸️</div>
+      <p class="haunt-message">The crypt is still sealed</p>
+      <p class="muted">Open the <a href="/halloween/rankchoice/settings/" style="color:var(--orange-bright)">Crypt Keeper</a> to name the contestants and open the voting.</p>
+    </section>
+
+    <div id="view-open" hidden>
+      <section class="card vote-callout">
+        <div class="big-emoji">🎃</div>
+        <p class="haunt-message">Cast your vote, mortals!</p>
+        <p class="muted">Go here to vote on your phone:</p>
+        <a class="vote-url" id="vote-url" href="#"></a>
+      </section>
+      <section class="card">
+        <h2>Souls who have voted <span class="count-badge" id="voter-count">0</span></h2>
+        <ul class="voter-grid" id="voter-grid"></ul>
+        <p class="muted" id="no-voters">No one has dared to vote yet...</p>
+      </section>
+      <div class="center">
+        <button class="button button-primary button-big" id="tally-button" type="button">💀 Count the Votes</button>
+        <p class="error" id="tally-error"></p>
+      </div>
+    </div>
+
+    <section class="card center" id="view-closed" hidden>
+      <div class="big-emoji">⚰️</div>
+      <p class="haunt-message">The voting has ended</p>
+      <button class="button button-primary button-big" id="replay-button" type="button">🔮 Reveal the Winners</button>
+      <div id="final-podium" style="margin-top:22px"></div>
+    </section>
+
+    <p class="error center" id="fatal-error"></p>
+  </main>
+
+  <div class="stage" id="stage" hidden>
+    <div class="fog" aria-hidden="true"></div>
+    <div class="stage-title" id="stage-title"></div>
+    <div class="stage-sub" id="stage-sub"></div>
+    <div class="bars" id="stage-bars"></div>
+    <div id="stage-winner"></div>
+  </div>
+
+  <script type="module" src="/js/halloween/rankchoice/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <meta name="robots" content="noindex">
+  <title>Crypt Keeper | Costume Contest</title>
+  <link rel="stylesheet" href="/css/halloween/rankchoice.css">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="/halloween/rankchoice/">☾ Crypt <b>Keeper</b></a>
+    <nav class="topbar-links"><a href="/halloween/rankchoice/">Ballot Box</a></nav>
+  </header>
+
+  <main class="shell">
+    <h1 class="title">Crypt <span>Keeper</span></h1>
+    <p class="error" id="fatal-error"></p>
+
+    <section class="card center" id="view-signin">
+      <div class="big-emoji">🔒</div>
+      <p class="haunt-message">Only the Crypt Keeper may enter</p>
+      <button class="button button-primary" id="signin-button" type="button">Sign in with Google</button>
+      <p class="error" id="signin-error"></p>
+    </section>
+
+    <div id="view-admin" hidden>
+      <section class="card">
+        <h2>The Ritual <span class="status-pill" id="status-pill" data-status="setup">SEALED</span></h2>
+        <div class="row">
+          <button class="button button-primary" id="start-button" type="button">🎃 Open the Voting</button>
+          <button class="button button-danger" id="reset-button" type="button">☠ Reset Everything</button>
+          <button class="button button-quiet" id="signout-button" type="button">Sign out</button>
+        </div>
+        <p class="error" id="admin-error"></p>
+      </section>
+
+      <section class="card">
+        <h2>Contestants</h2>
+        <label class="field">ONE NAME PER LINE (editable only while sealed)
+          <textarea id="candidates-input"></textarea>
+        </label>
+        <button class="button button-quiet" id="save-candidates" type="button">Save Contestants</button>
+      </section>
+
+      <section class="card">
+        <h2>Cast Ballots <span class="count-badge" id="ballot-count">0</span></h2>
+        <ul class="admin-list" id="ballot-list"></ul>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="/js/halloween/rankchoice/settings.js"></script>
+</body>
+</html>

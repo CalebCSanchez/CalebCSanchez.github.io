@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101014">
+  <title>Vote | Costume Contest</title>
+  <link rel="stylesheet" href="/css/halloween/rankchoice.css">
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+</head>
+<body>
+  <div class="atmosphere" aria-hidden="true"></div>
+  <header class="topbar"><span class="brand">☾ Costume <b>Contest</b></span></header>
+
+  <main class="shell narrow">
+    <section class="card center" id="view-loading"><p class="muted flicker">Opening the crypt door...</p></section>
+
+    <section class="card center" id="view-closed" hidden>
+      <div class="big-emoji">🕸️</div>
+      <p class="haunt-message" id="closed-title">The voting has not been set up yet!</p>
+      <p class="muted" id="closed-text">The spirits are still preparing the ballots. Check back soon...</p>
+    </section>
+
+    <section class="card" id="view-name" hidden>
+      <p class="eyebrow">✦ STEP 1</p>
+      <h1 class="title" style="font-size:38px">Who <span>goes there?</span></h1>
+      <form id="name-form">
+        <label class="field">YOUR NAME
+          <input type="text" id="name-input" maxlength="30" autocomplete="off" required>
+        </label>
+        <button class="button button-primary" type="submit" style="width:100%">Enter the Crypt</button>
+        <p class="error" id="name-error"></p>
+      </form>
+    </section>
+
+    <section class="card" id="view-rank" hidden>
+      <p class="eyebrow">✦ STEP 2</p>
+      <h1 class="title" style="font-size:38px">Rank the <span>costumes</span></h1>
+      <p class="muted">Drag the handle to order them from best (top) to least best (bottom).</p>
+      <ol class="rank-list" id="rank-list"></ol>
+      <button class="button button-primary" id="submit-button" type="button" style="width:100%">Seal My Vote 🦇</button>
+      <p class="error" id="rank-error"></p>
+    </section>
+
+    <section class="card center" id="view-done" hidden>
+      <div class="big-emoji">👻</div>
+      <p class="haunt-message">Your vote is sealed!</p>
+      <p class="muted">Watch the big screen for the final reveal.</p>
+    </section>
+  </main>
+
+  <script type="module" src="/js/halloween/rankchoice/vote.js"></script>
+</body>
+</html>

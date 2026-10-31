@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isHost() {
+      return request.auth != null
+        && request.auth.token.email == 'calebcsanchez1@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    match /rankchoice/config {
+      allow read: if true;
+      allow write: if isHost();
+
+      match /ballots/{id} {
+        allow read: if true;
+        allow delete, update: if isHost();
+        // Guests may only create one new ballot, and only while voting is open.
+        allow create: if isHost() || (
+          get(/databases/$(database)/documents/rankchoice/config).data.status == 'open'
+          && request.resource.data.keys().hasOnly(['name', 'ranking'])
+          && request.resource.data.name is string
+          && request.resource.data.name.size() > 0
+          && request.resource.data.name.size() <= 30
+          && request.resource.data.name == request.resource.data.name.trim()
+          && !request.resource.data.name.matches('.*/.*')
+          && id == request.resource.data.name.lower()
+          && request.resource.data.ranking is list
+          && request.resource.data.ranking.size() == get(/databases/$(database)/documents/rankchoice/config).data.candidates.size()
+          && request.resource.data.ranking.toSet().size() == request.resource.data.ranking.size()
+          && request.resource.data.ranking.hasOnly(get(/databases/$(database)/documents/rankchoice/config).data.candidates)
+        );
+      }
+    }
+  }
+}
