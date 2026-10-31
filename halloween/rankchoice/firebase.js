@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
 import {
-  getFirestore, doc, collection, onSnapshot, getDoc, getDocs, setDoc, deleteDoc, writeBatch
+  getFirestore, doc, collection, onSnapshot, getDoc, getDocs, setDoc, deleteDoc, writeBatch, serverTimestamp
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 import {
   getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
@@ -18,10 +18,19 @@ export const isConfigured = !firebaseConfig.apiKey.startsWith('YOUR_');
 export const ballotKey = name => name.toLowerCase();
 export const cleanName = name => name.trim().replace(/\s+/g, ' ');
 
+// Must match the duration in firestore.rules.
+export const VOTING_HOURS = 3;
+
+// A null openedAt means the server timestamp is still pending, so treat it as fresh.
+export const isExpired = cfg => cfg.status === 'open' && cfg.openedAt !== null
+  && Date.now() > cfg.openedAt + VOTING_HOURS * 3600 * 1000;
+
+export const startVoting = () => saveConfig({ status: 'open', openedAt: serverTimestamp() });
+
 export function watchConfig(cb) {
   return onSnapshot(configRef, snap => {
     const d = snap.exists() ? snap.data() : {};
-    cb({ status: d.status || 'setup', candidates: d.candidates || [] });
+    cb({ status: d.status || 'setup', candidates: d.candidates || [], openedAt: d.openedAt ? d.openedAt.toMillis() : null });
   }, err => cb(null, err));
 }
 

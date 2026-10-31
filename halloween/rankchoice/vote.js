@@ -1,4 +1,4 @@
-import { isConfigured, watchConfig, hasVoted, submitBallot, cleanName } from './firebase.js';
+import { isConfigured, watchConfig, hasVoted, submitBallot, cleanName, isExpired } from './firebase.js';
 
 const $ = id => document.getElementById(id);
 const views = ['loading', 'closed', 'name', 'rank', 'done'];
@@ -39,8 +39,8 @@ function buildRankList() {
 function render() {
   if (step === 'done') return;
   if (!config) return;
-  if (config.status !== 'open' || !config.candidates.length) {
-    const closed = config.status === 'closed';
+  if (config.status !== 'open' || isExpired(config) || !config.candidates.length) {
+    const closed = config.status === 'closed' || isExpired(config);
     $('closed-title').textContent = closed ? 'The voting has ended!' : 'The voting has not been set up yet!';
     $('closed-text').textContent = closed
       ? 'The spirits have sealed the ballot box. Watch the big screen for the winners...'
@@ -89,6 +89,7 @@ $('submit-button').addEventListener('click', async () => {
 if (!isConfigured) {
   show('closed');
 } else {
+  setInterval(render, 60000);
   watchConfig((cfg, error) => {
     if (error) { show('closed'); return; }
     config = cfg;

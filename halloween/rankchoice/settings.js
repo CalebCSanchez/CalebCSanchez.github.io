@@ -1,5 +1,5 @@
 import {
-  isConfigured, watchConfig, watchBallots, saveConfig, resetAll, removeBallot,
+  isConfigured, watchConfig, watchBallots, saveConfig, startVoting, isExpired, resetAll, removeBallot,
   watchAuth, isAdmin, signInAdmin, signOutAdmin
 } from './firebase.js';
 
@@ -27,9 +27,9 @@ async function run(fn) {
 function renderConfig() {
   const pill = $('status-pill');
   pill.dataset.status = config.status;
-  pill.textContent = LABELS[config.status];
+  pill.textContent = isExpired(config) ? 'AUTO-LOCKED (3H)' : LABELS[config.status];
   const sealed = config.status === 'setup';
-  $('start-button').disabled = config.status === 'open' || !config.candidates.length;
+  $('start-button').disabled = (config.status === 'open' && !isExpired(config)) || !config.candidates.length;
   $('candidates-input').disabled = !sealed;
   $('save-candidates').disabled = !sealed;
   if (document.activeElement !== $('candidates-input')) $('candidates-input').value = config.candidates.join('\n');
@@ -76,7 +76,7 @@ $('save-candidates').addEventListener('click', () => run(() => {
   return saveConfig({ candidates });
 }));
 
-$('start-button').addEventListener('click', () => run(() => saveConfig({ status: 'open' })));
+$('start-button').addEventListener('click', () => run(() => startVoting()));
 
 $('reset-button').addEventListener('click', () => run(async () => {
   if (!confirm('Delete every ballot and seal the crypt again?')) return;
