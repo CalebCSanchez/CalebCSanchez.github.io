@@ -8,7 +8,7 @@ A clean, lightweight portfolio website built with pure HTML, CSS, and JavaScript
 - **Modern Styling**: Cyberpunk-inspired theme with smooth animations
 - **PDF Resume Generator**: Automatically generates a professional resume from portfolio content
 - **Fast Loading**: No build system or heavy dependencies
-- **Game Integration**: Links to custom rock-breaker game
+- **Side Projects**: A hub linking to small projects (Halloween bingo and costume contest, Rock Breaker, Raven Timer)
 
 ## Technology Stack
 
@@ -20,18 +20,21 @@ A clean, lightweight portfolio website built with pure HTML, CSS, and JavaScript
 ## File Structure
 
 ```
-├── index.html          # Main portfolio page
-├── style.css           # All styling and animations  
-├── script.js           # Portfolio functionality and PDF generation
-├── rock-breaker.html   # Custom game
-├── images/             # Images and assets
-├── Profile.pdf         # LinkedIn profile PDF
-└── Resume_7.22.2024.pdf # Current resume PDF
+├── index.html            # Portfolio home page
+├── assets/               # Portfolio CSS/JS, images, documents (PDFs are gitignored)
+├── projects/             # Side projects hub + one folder per project
+│   ├── rock-breaker/
+│   └── raven-timer/
+├── halloween/            # Event pages: bingo/ and rankchoice/ (Firebase)
+├── tests/                # Unit tests, mirroring the source tree
+├── archive/              # Retired files
+├── firestore.rules       # Firebase security rules
+└── .github/copilot-instructions.md
 ```
 
 ## Local Development
 
-Simply open `index.html` in your browser. No build process required!
+Serve the folder over HTTP (for example `python -m http.server`) and open `http://localhost:8000`. Paths are root-absolute and module scripts need HTTP, so `file://` will not work.
 
 ## Features Breakdown
 

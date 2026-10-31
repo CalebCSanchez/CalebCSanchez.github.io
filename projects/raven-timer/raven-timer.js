@@ -33,9 +33,9 @@
   let soundEnabled = true; // user can toggle site audio
 
   // preload fallback HTMLAudio elements (used if WebAudio unavailable)
-  try{ fallbackAudio.newHand = new Audio('audio/newHand.mp3'); fallbackAudio.newHand.loop = false; }catch(e){ fallbackAudio.newHand = null; }
-  try{ fallbackAudio.raven = new Audio('audio/raven.mp3'); fallbackAudio.raven.loop = true; }catch(e){ fallbackAudio.raven = null; }
-  try{ fallbackAudio.scroll = new Audio('audio/ScrollOpen.mp3'); fallbackAudio.scroll.loop = false; }catch(e){ fallbackAudio.scroll = null; }
+  try{ fallbackAudio.newHand = new Audio('/projects/raven-timer/audio/newHand.mp3'); fallbackAudio.newHand.loop = false; }catch(e){ fallbackAudio.newHand = null; }
+  try{ fallbackAudio.raven = new Audio('/projects/raven-timer/audio/raven.mp3'); fallbackAudio.raven.loop = true; }catch(e){ fallbackAudio.raven = null; }
+  try{ fallbackAudio.scroll = new Audio('/projects/raven-timer/audio/ScrollOpen.mp3'); fallbackAudio.scroll.loop = false; }catch(e){ fallbackAudio.scroll = null; }
 
   function saveAudioSetting(){
     try{ localStorage.setItem(STORAGE_KEYS.SOUND, JSON.stringify(!!soundEnabled)); }catch(e){}
@@ -60,7 +60,7 @@
       }catch(e){ audioCtx = null; }
     }
     if(!audioCtx) return;
-    const toLoad = [ ['newHand','audio/newHand.mp3'], ['raven','audio/raven.mp3'], ['scroll','audio/ScrollOpen.mp3'] ];
+    const toLoad = [ ['newHand','/projects/raven-timer/audio/newHand.mp3'], ['raven','/projects/raven-timer/audio/raven.mp3'], ['scroll','/projects/raven-timer/audio/ScrollOpen.mp3'] ];
     await Promise.all(toLoad.map(async ([name,url])=>{
       if(audioBuffers[name]) return;
       try{
